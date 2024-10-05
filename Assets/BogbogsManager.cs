@@ -12,10 +12,7 @@ public class BogbogsManager : Singleton<BogbogsManager>
         }
     }
 
-    private void TraitsManager_OnTraitStatusChanged(
-        TraitData traitData,
-        ETraitStatus status
-        )
+    private void TraitsManager_OnTraitStatusChanged(TraitData traitData, ETraitStatus status)
     {
         switch(status)
         {
@@ -47,6 +44,9 @@ public class BogbogsManager : Singleton<BogbogsManager>
     {
         base.OnDestroy();
 
-        TraitsManager.Instance.OnTraitStatusChanged.RemoveListener(TraitsManager_OnTraitStatusChanged);
+        if(TraitsManager.HasInstance)
+        {
+            TraitsManager.Instance.OnTraitStatusChanged.RemoveListener(TraitsManager_OnTraitStatusChanged);
+        }
     }
 }

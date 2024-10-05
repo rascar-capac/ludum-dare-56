@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 public class TraitsManager : Singleton<TraitsManager>
 {
-    public SerializableDictionary<TraitData, TraitInfo> CurrentTraits;
+    public SerializableDictionary<TraitData, TraitInfo> Traits;
     public float UnknownTraitThreshold;
     public float GreatTraitThreshold;
 
@@ -20,7 +20,7 @@ public class TraitsManager : Singleton<TraitsManager>
 
     public void RefreshTraits(int tickCount)
     {
-        List<TraitData> traitTypes = CurrentTraits.Keys.ToList();
+        List<TraitData> traitTypes = Traits.Keys.ToList();
 
         foreach(TraitData type in traitTypes)
         {
@@ -50,9 +50,9 @@ public class TraitsManager : Singleton<TraitsManager>
             totalInfluenceRatio = tickCount * -type.InfluenceLossPerTick;
         }
 
-        TraitInfo traitInfo = CurrentTraits[type];
+        TraitInfo traitInfo = Traits[type];
         traitInfo.Value = Mathf.Clamp01(traitInfo.Value + totalInfluenceRatio);
-        CurrentTraits[type] = traitInfo;
+        Traits[type] = traitInfo;
 
         RefreshTraitStatus(type);
     }
@@ -73,7 +73,7 @@ public class TraitsManager : Singleton<TraitsManager>
 
     public void RefreshTraitStatus(TraitData type)
     {
-        TraitInfo traitInfo = CurrentTraits[type];
+        TraitInfo traitInfo = Traits[type];
 
         if(traitInfo.Value == 0)
         {
@@ -95,7 +95,7 @@ public class TraitsManager : Singleton<TraitsManager>
             traitInfo.Status = ETraitStatus.Great;
         }
 
-        CurrentTraits[type] = traitInfo;
+        Traits[type] = traitInfo;
         OnTraitStatusChanged.Invoke(type, traitInfo.Status);
     }
 }

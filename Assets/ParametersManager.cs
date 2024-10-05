@@ -1,4 +1,4 @@
 public class ParametersManager : Singleton<ParametersManager>
 {
-    public SerializableDictionary<ParameterData, float> CurrentParameters;
+    public SerializableDictionary<ParameterData, float> Parameters;
 }
