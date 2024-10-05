@@ -1,10 +1,16 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class TraitsManager : Singleton<TraitsManager>
 {
-    public SerializableDictionary<TraitData, float> CurrentTraits;
+    public SerializableDictionary<TraitData, TraitInfo> CurrentTraits;
+    public float UnknownTraitThreshold;
+    public float GreatTraitThreshold;
+
+    public UnityEvent<TraitData, ETraitStatus> OnTraitStatusChanged { get; } = new();
 
     [ContextMenu("Skip 1 tick")]
     public void RefreshTraits()
@@ -44,7 +50,11 @@ public class TraitsManager : Singleton<TraitsManager>
             totalInfluenceRatio = tickCount * -type.InfluenceLossPerTick;
         }
 
-        CurrentTraits[type] = Mathf.Clamp01(CurrentTraits[type] + totalInfluenceRatio);
+        TraitInfo traitInfo = CurrentTraits[type];
+        traitInfo.Value = Mathf.Clamp01(traitInfo.Value + totalInfluenceRatio);
+        CurrentTraits[type] = traitInfo;
+
+        RefreshTraitStatus(type);
     }
 
     public float ComputeInfluenceGroupRatio01(InfluenceGroup group)
@@ -60,4 +70,48 @@ public class TraitsManager : Singleton<TraitsManager>
 
         return totalInfluenceRatio;
     }
+
+    public void RefreshTraitStatus(TraitData type)
+    {
+        TraitInfo traitInfo = CurrentTraits[type];
+
+        if(traitInfo.Value == 0)
+        {
+            traitInfo.Status = ETraitStatus.NotPossessed;
+        }
+        else if(traitInfo.Value < UnknownTraitThreshold)
+        {
+            if(!traitInfo.HasBeenDiscovered)
+            {
+                traitInfo.Status = ETraitStatus.Unknown;
+            }
+            else
+            {
+                traitInfo.Status = ETraitStatus.Discovered;
+            }
+        }
+        else if(traitInfo.Value < GreatTraitThreshold)
+        {
+            traitInfo.Status = ETraitStatus.Great;
+        }
+
+        CurrentTraits[type] = traitInfo;
+        OnTraitStatusChanged.Invoke(type, traitInfo.Status);
+    }
+}
+
+[Serializable]
+public struct TraitInfo
+{
+    public float Value;
+    public bool HasBeenDiscovered;
+    public ETraitStatus Status;
+}
+
+public enum ETraitStatus
+{
+    NotPossessed = 0,
+    Unknown = 1,
+    Discovered = 2,
+    Great = 3,
 }

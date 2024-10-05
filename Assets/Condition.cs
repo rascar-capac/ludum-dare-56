@@ -25,7 +25,7 @@ public class Condition
         return Type switch
         {
             ParameterData parameter_data => ParametersManager.Instance.CurrentParameters[parameter_data],
-            TraitData trait_data => TraitsManager.Instance.CurrentTraits[trait_data],
+            TraitData trait_data => TraitsManager.Instance.CurrentTraits[trait_data].Value,
             _ => throw new NotImplementedException()
         };
     }
