@@ -40,3 +40,4 @@ MonoBehaviour:
         _MinimumValue: 0.5
         _MaximumValue: 0
     InfluencePerTick: 0.2
+  InfluenceLossPerTick: 0.1
