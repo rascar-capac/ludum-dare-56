@@ -92,6 +92,10 @@ public class TraitsManager : Singleton<TraitsManager>
         }
         else if(traitInfo.Value < GreatTraitThreshold)
         {
+            traitInfo.Status = ETraitStatus.Discovered;
+        }
+        else
+        {
             traitInfo.Status = ETraitStatus.Great;
         }
 
