@@ -248,6 +248,8 @@ MonoBehaviour:
   Icon: {fileID: 3023639597518982818}
   Text: {fileID: 3285139760396467250}
   Data: {fileID: 0}
+  BumpDuration: 1.5
+  GreatBumpDuration: 0.5
 --- !u!1 &8862606529748739269
 GameObject:
   m_ObjectHideFlags: 0
@@ -447,7 +449,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 9be75366ba775764b91fa684e678f58a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b63bcfc82557bb44dad3c93dfc4ec59a, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
