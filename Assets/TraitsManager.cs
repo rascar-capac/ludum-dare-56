@@ -6,18 +6,23 @@ public class TraitsManager : Singleton<TraitsManager>
 {
     public SerializableDictionary<TraitData, float> CurrentTraits;
 
-    [ContextMenu("RefreshTraits")]
+    [ContextMenu("Skip 1 tick")]
     public void RefreshTraits()
+    {
+        RefreshTraits(1);
+    }
+
+    public void RefreshTraits(int tickCount)
     {
         List<TraitData> traitTypes = CurrentTraits.Keys.ToList();
 
         foreach(TraitData type in traitTypes)
         {
-            RefreshTrait(type);
+            RefreshTrait(type, tickCount);
         }
     }
 
-    public void RefreshTrait(TraitData type)
+    public void RefreshTrait(TraitData type, int tickCount)
     {
         float totalInfluenceRatio = 0f;
         bool anyInfluenceGroupIsFulfilled = false;
@@ -31,12 +36,12 @@ public class TraitsManager : Singleton<TraitsManager>
                 anyInfluenceGroupIsFulfilled = true;
             }
 
-            totalInfluenceRatio += influenceGroup.InfluencePerTick * influenceGroupRatio;
+            totalInfluenceRatio += tickCount * influenceGroup.InfluencePerTick * influenceGroupRatio;
         }
 
         if(!anyInfluenceGroupIsFulfilled)
         {
-            totalInfluenceRatio = -type.InfluenceLossPerTick;
+            totalInfluenceRatio = tickCount * -type.InfluenceLossPerTick;
         }
 
         CurrentTraits[type] = Mathf.Clamp01(CurrentTraits[type] + totalInfluenceRatio);
