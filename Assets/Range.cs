@@ -1,3 +1,4 @@
+using Unity.Mathematics;
 using UnityEngine;
 
 [System.Serializable]
@@ -42,7 +43,7 @@ public class IntegerRange : Range<int>
 
     public override int GetRandomValue()
     {
-        return Random.Range( MinimumValue, MaximumValue );
+        return UnityEngine.Random.Range( MinimumValue, MaximumValue );
     }
 
     public override bool Contains(
@@ -71,7 +72,7 @@ public class FloatRange : Range<float>
 
     public override float GetRandomValue()
     {
-        return Random.Range( MinimumValue, MaximumValue );
+        return UnityEngine.Random.Range( MinimumValue, MaximumValue );
     }
 
     public override bool Contains(
@@ -80,6 +81,24 @@ public class FloatRange : Range<float>
     {
         return MinimumValue <= value_to_check
             && value_to_check <= MaximumValue;
+    }
+
+    public float RemapFrom(
+        float input,
+        float minimum_value = 0,
+        float maximum_value = 1
+        )
+    {
+        return math.remap( minimum_value, maximum_value, _MinimumValue, _MaximumValue, input );
+    }
+
+    public float RemapTo(
+        float input,
+        float minimum_value = 0,
+        float maximum_value = 1
+        )
+    {
+        return math.remap( _MinimumValue, _MaximumValue, minimum_value, maximum_value, input );
     }
 }
 
@@ -100,7 +119,7 @@ public class Vector3Range : Range<Vector3>
 
     public override Vector3 GetRandomValue()
     {
-        return new Vector3( Random.Range( MinimumValue.x, MaximumValue.x ), Random.Range( MinimumValue.y, MaximumValue.y ), Random.Range( MinimumValue.z, MaximumValue.z ) );
+        return new Vector3( UnityEngine.Random.Range( MinimumValue.x, MaximumValue.x ), UnityEngine.Random.Range( MinimumValue.y, MaximumValue.y ), UnityEngine.Random.Range( MinimumValue.z, MaximumValue.z ) );
     }
 
     public override bool Contains(
