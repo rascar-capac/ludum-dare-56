@@ -9,4 +9,5 @@ public class TraitData : AConditionData
     public Sprite AttributeSprite;
     //public Animation Animation;
     public List<InfluenceGroup> Influences;
+    public float InfluenceLossPerTick;
 }

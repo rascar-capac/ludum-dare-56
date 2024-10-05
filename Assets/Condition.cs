@@ -1,23 +1,32 @@
 using System;
+using UnityEngine;
 
 [Serializable]
-public abstract class Condition
+public class Condition
 {
     public AConditionData Type;
     public bool IsRange;
     public FloatRange Thresholds;
 
-    public abstract float ParameterValue { get; }
-
-    public virtual float GetInfluenceRatio()
+    public float GetInfluenceRatio01()
     {
         if(IsRange)
         {
-            return Thresholds.Contains(ParameterValue) ? 1 : -1;
+            return Thresholds.Contains(GetParameterValue()) ? 1 : 0;
         }
         else
         {
-            return Thresholds.RemapTo(ParameterValue);
+            return Mathf.Clamp01(Thresholds.RemapTo(GetParameterValue()));
         }
+    }
+
+    public float GetParameterValue()
+    {
+        return Type switch
+        {
+            ParameterData parameter_data => ParametersManager.Instance.CurrentParameters[parameter_data],
+            TraitData trait_data => TraitsManager.Instance.CurrentTraits[trait_data],
+            _ => throw new NotImplementedException()
+        };
     }
 }

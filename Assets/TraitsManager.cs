@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 public class TraitsManager : Singleton<TraitsManager>
 {
-    public Dictionary<TraitData, float> CurrentTraits;
+    public SerializableDictionary<TraitData, float> CurrentTraits;
 
+    [ContextMenu("RefreshTraits")]
     public void RefreshTraits()
     {
         List<TraitData> traitTypes = CurrentTraits.Keys.ToList();
@@ -17,16 +19,40 @@ public class TraitsManager : Singleton<TraitsManager>
 
     public void RefreshTrait(TraitData type)
     {
-        foreach(InfluenceGroup influence_group in type.Influences)
-        {
-            float total_influence_ratio = 1f;
+        float totalInfluenceRatio = 0f;
+        bool anyInfluenceGroupIsFulfilled = false;
 
-            foreach(Condition condition in influence_group.Conditions)
+        foreach(InfluenceGroup influenceGroup in type.Influences)
+        {
+            float influenceGroupRatio = ComputeInfluenceGroupRatio01(influenceGroup);
+
+            if(influenceGroupRatio > 0)
             {
-                total_influence_ratio = condition.GetInfluenceRatio();
+                anyInfluenceGroupIsFulfilled = true;
             }
 
-            CurrentTraits[type] += influence_group.InfluencePerTick * total_influence_ratio;
+            totalInfluenceRatio += influenceGroup.InfluencePerTick * influenceGroupRatio;
         }
+
+        if(!anyInfluenceGroupIsFulfilled)
+        {
+            totalInfluenceRatio = -type.InfluenceLossPerTick;
+        }
+
+        CurrentTraits[type] = Mathf.Clamp01(CurrentTraits[type] + totalInfluenceRatio);
+    }
+
+    public float ComputeInfluenceGroupRatio01(InfluenceGroup group)
+    {
+        float totalInfluenceRatio = 1f;
+
+        foreach(Condition condition in group.Conditions)
+        {
+            float influenceRatio = condition.GetInfluenceRatio01();
+
+            totalInfluenceRatio *= influenceRatio;
+        }
+
+        return totalInfluenceRatio;
     }
 }
