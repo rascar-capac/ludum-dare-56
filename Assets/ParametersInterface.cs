@@ -12,6 +12,7 @@ public class ParametersInterface : MonoBehaviour
     public Sprite AttemptOffSprite;
     public Sprite AttemptOnSprite;
     public DurationSetter DurationSetter;
+    public GameObject PreviewText;
 
     public IReadOnlyDictionary<ParameterData, float> CurrentParameters => Knobs.ToDictionary(knob => knob.Key, knob => knob.Value.CurrentValue);
 
@@ -63,13 +64,15 @@ public class ParametersInterface : MonoBehaviour
     {
         RefreshAttemptLights();
         PreviewButton.interactable = false;
-        CommitButton.interactable = true;
+        CommitButton.gameObject.SetActive(true);
+        PreviewText.SetActive(true);
     }
 
     private void ParametersManager_OnCommited(IReadOnlyDictionary<ParameterData, float> parameters, int tickCount)
     {
         RefreshAttemptLights();
-        CommitButton.interactable = false;
+        CommitButton.gameObject.SetActive(false);
+        PreviewText.SetActive(false);
     }
 
     private void PreviewButton_OnClick()
@@ -96,7 +99,8 @@ public class ParametersInterface : MonoBehaviour
 
         RefreshKnobs();
 
-        CommitButton.interactable = false;
+        CommitButton.gameObject.SetActive(false);
+        PreviewText.SetActive(false);
 
         PreviewButton.onClick.AddListener(PreviewButton_OnClick);
         CommitButton.onClick.AddListener(CommitButton_OnClick);
