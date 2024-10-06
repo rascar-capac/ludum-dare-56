@@ -18,7 +18,7 @@ public class DaysCounter : MonoBehaviour
         Refresh();
     }
 
-    private void ParametersManager_OnPreviewLeft()
+    private void ParametersManager_OnPreviewClosed()
     {
         Refresh();
     }
@@ -31,7 +31,7 @@ public class DaysCounter : MonoBehaviour
     private void Awake()
     {
         ParametersManager.Instance.OnPreviewed.AddListener(ParametersManager_OnPreviewed);
-        ParametersManager.Instance.OnPreviewLeft.AddListener(ParametersManager_OnPreviewLeft);
+        ParametersManager.Instance.OnPreviewClosed.AddListener(ParametersManager_OnPreviewClosed);
         ParametersManager.Instance.OnCommited.AddListener(ParametersManager_OnCommited);
     }
 
@@ -45,7 +45,7 @@ public class DaysCounter : MonoBehaviour
         if(ParametersManager.HasInstance)
         {
             ParametersManager.Instance.OnPreviewed.RemoveListener(ParametersManager_OnPreviewed);
-            ParametersManager.Instance.OnPreviewLeft.RemoveListener(ParametersManager_OnPreviewLeft);
+            ParametersManager.Instance.OnPreviewClosed.RemoveListener(ParametersManager_OnPreviewClosed);
             ParametersManager.Instance.OnCommited.RemoveListener(ParametersManager_OnCommited);
         }
     }

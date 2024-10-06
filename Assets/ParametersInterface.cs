@@ -12,7 +12,8 @@ public class ParametersInterface : MonoBehaviour
     public Sprite AttemptOffSprite;
     public Sprite AttemptOnSprite;
     public DurationSetter DurationSetter;
-    public GameObject PreviewText;
+    public Button ClosePreviewButton;
+    public GameObject NoMoreAttemptsText;
 
     public IReadOnlyDictionary<ParameterData, float> CurrentParameters => Knobs.ToDictionary(knob => knob.Key, knob => knob.Value.CurrentValue);
 
@@ -40,9 +41,14 @@ public class ParametersInterface : MonoBehaviour
         ParametersManager.Instance.Preview(CurrentParameters, DurationSetter.SelectedValue);
     }
 
+    public void ClosePreview()
+    {
+        ParametersManager.Instance.TryClosePreview();
+    }
+
     public void Commit()
     {
-        ParametersManager.Instance.Commit(DurationSetter.SelectedValue);
+        ParametersManager.Instance.Commit();
     }
 
     private void Knob_OnValueChanged()
@@ -65,14 +71,24 @@ public class ParametersInterface : MonoBehaviour
         RefreshAttemptLights();
         PreviewButton.interactable = false;
         CommitButton.gameObject.SetActive(true);
-        PreviewText.SetActive(true);
+        ClosePreviewButton.gameObject.SetActive(ParametersManager.Instance.CurrentAttemptsCount < AttemptLights.Length);
+        NoMoreAttemptsText.SetActive(ParametersManager.Instance.CurrentAttemptsCount == AttemptLights.Length);
+    }
+
+    private void ParametersManager_OnPreviewClosed()
+    {
+        RefreshAttemptLights();
+        CommitButton.gameObject.SetActive(false);
+        ClosePreviewButton.gameObject.SetActive(false);
+        NoMoreAttemptsText.SetActive(false);
     }
 
     private void ParametersManager_OnCommited(IReadOnlyDictionary<ParameterData, float> parameters, int tickCount)
     {
         RefreshAttemptLights();
         CommitButton.gameObject.SetActive(false);
-        PreviewText.SetActive(false);
+        ClosePreviewButton.gameObject.SetActive(false);
+        NoMoreAttemptsText.SetActive(false);
     }
 
     private void PreviewButton_OnClick()
@@ -83,6 +99,11 @@ public class ParametersInterface : MonoBehaviour
     private void CommitButton_OnClick()
     {
         Commit();
+    }
+
+    private void ClosePreviewButton_OnClick()
+    {
+        ClosePreview();
     }
 
     private void Awake()
@@ -100,15 +121,18 @@ public class ParametersInterface : MonoBehaviour
         RefreshKnobs();
 
         CommitButton.gameObject.SetActive(false);
-        PreviewText.SetActive(false);
+        ClosePreviewButton.gameObject.SetActive(false);
+        NoMoreAttemptsText.SetActive(false);
 
         PreviewButton.onClick.AddListener(PreviewButton_OnClick);
         CommitButton.onClick.AddListener(CommitButton_OnClick);
+        ClosePreviewButton.onClick.AddListener(ClosePreviewButton_OnClick);
 
         DurationSetter.OnValueChanged.AddListener(DurationSetter_OnValueChanged);
 
         ParametersManager.Instance.OnParametersChanged.AddListener(ParametersManager_OnParametersChanged);
         ParametersManager.Instance.OnPreviewed.AddListener(ParametersManager_OnPreviewed);
+        ParametersManager.Instance.OnPreviewClosed.AddListener(ParametersManager_OnPreviewClosed);
         ParametersManager.Instance.OnCommited.AddListener(ParametersManager_OnCommited);
     }
 
@@ -121,6 +145,7 @@ public class ParametersInterface : MonoBehaviour
 
         PreviewButton.onClick.RemoveListener(PreviewButton_OnClick);
         CommitButton.onClick.RemoveListener(CommitButton_OnClick);
+        ClosePreviewButton.onClick.RemoveListener(ClosePreviewButton_OnClick);
 
         DurationSetter.OnValueChanged.RemoveListener(DurationSetter_OnValueChanged);
 
@@ -128,6 +153,7 @@ public class ParametersInterface : MonoBehaviour
         {
             ParametersManager.Instance.OnParametersChanged.RemoveListener(ParametersManager_OnParametersChanged);
             ParametersManager.Instance.OnPreviewed.RemoveListener(ParametersManager_OnPreviewed);
+            ParametersManager.Instance.OnPreviewClosed.RemoveListener(ParametersManager_OnPreviewClosed);
             ParametersManager.Instance.OnCommited.RemoveListener(ParametersManager_OnCommited);
         }
     }

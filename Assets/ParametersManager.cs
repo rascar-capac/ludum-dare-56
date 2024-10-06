@@ -15,13 +15,14 @@ public class ParametersManager : Singleton<ParametersManager>
     public int CurrentAttemptsCount;
     public bool IsInPreview;
     public IReadOnlyDictionary<ParameterData, float> PreviewParameters;
+    public int PreviewTickCount;
     public int TotalTicksCounter;
     public int SavedTotalTicksCounter;
     public Tween VolumeTween;
 
     public UnityEvent<IReadOnlyDictionary<ParameterData, float>, int> OnParametersChanged { get; } = new();
     public UnityEvent<IReadOnlyDictionary<ParameterData, float>, int> OnPreviewed { get; } = new();
-    public UnityEvent OnPreviewLeft { get; } = new();
+    public UnityEvent OnPreviewClosed { get; } = new();
     public UnityEvent<IReadOnlyDictionary<ParameterData, float>, int> OnCommited { get; } = new();
 
     public void SetParameters(IReadOnlyDictionary<ParameterData, float> parameters, int tickCount)
@@ -57,18 +58,19 @@ public class ParametersManager : Singleton<ParametersManager>
             VolumeTween = DOTween.To(() => Volume.weight, x => Volume.weight = x, 1f, 0.5f).SetEase(Ease.OutQuint);
         }
 
-        TryQuitPreview(applyVolumeEffect: false);
+        TryClosePreview(applyVolumeEffect: false);
         CurrentAttemptsCount++;
         IsInPreview = true;
         PreviewParameters = parameters;
+        PreviewTickCount = tickCount;
 
         SavedTotalTicksCounter = TotalTicksCounter;
         TotalTicksCounter += tickCount;
         BogbogsManager.Instance.SaveCurrentState();
-        OnPreviewed.Invoke(PreviewParameters, tickCount);
+        OnPreviewed.Invoke(PreviewParameters, PreviewTickCount);
     }
 
-    public void TryQuitPreview(bool applyVolumeEffect = true)
+    public void TryClosePreview(bool applyVolumeEffect = true)
     {
         if(!IsInPreview)
         {
@@ -77,6 +79,7 @@ public class ParametersManager : Singleton<ParametersManager>
 
         IsInPreview = false;
         PreviewParameters = null;
+        PreviewTickCount = 0;
 
         TotalTicksCounter = SavedTotalTicksCounter;
         BogbogsManager.Instance.RestorePreviousState();
@@ -93,10 +96,10 @@ public class ParametersManager : Singleton<ParametersManager>
                 });
         }
 
-        OnPreviewLeft.Invoke();
+        OnPreviewClosed.Invoke();
     }
 
-    public void Commit(int tickCount)
+    public void Commit()
     {
         if(!IsInPreview)
         {
@@ -104,15 +107,15 @@ public class ParametersManager : Singleton<ParametersManager>
         }
 
         IReadOnlyDictionary<ParameterData, float> previewParameters = PreviewParameters;
-        TryQuitPreview();
-        SetParameters(previewParameters, tickCount);
+        int previewTickCount = PreviewTickCount;
+        TryClosePreview();
+        SetParameters(previewParameters, previewTickCount);
         CurrentAttemptsCount = 0;
-        TotalTicksCounter += tickCount;
+        TotalTicksCounter += previewTickCount;
 
         //handle fade in/out
         //potential defeat/win
-        //stop post process
-        OnCommited.Invoke(previewParameters, tickCount);
+        OnCommited.Invoke(previewParameters, previewTickCount);
     }
 
     public override void Awake()

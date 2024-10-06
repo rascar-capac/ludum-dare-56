@@ -126,7 +126,7 @@ public class TraitsManager : Singleton<TraitsManager>
         RefreshTraits(tickCount, parameters);
     }
 
-    private void ParametersManager_OnPreviewLeft()
+    private void ParametersManager_OnPreviewClosed()
     {
         Traits = new(SavedTraits.ToDictionary(trait => trait.Key, trait => trait.Value));
     }
@@ -137,7 +137,7 @@ public class TraitsManager : Singleton<TraitsManager>
 
         ParametersManager.Instance.OnParametersChanged.AddListener(ParametersManager_OnParametersChanged);
         ParametersManager.Instance.OnPreviewed.AddListener(ParametersManager_OnPreviewed);
-        ParametersManager.Instance.OnPreviewLeft.AddListener(ParametersManager_OnPreviewLeft);
+        ParametersManager.Instance.OnPreviewClosed.AddListener(ParametersManager_OnPreviewClosed);
     }
 
     protected override void OnDestroy()
@@ -148,7 +148,7 @@ public class TraitsManager : Singleton<TraitsManager>
         {
             ParametersManager.Instance.OnParametersChanged.RemoveListener(ParametersManager_OnParametersChanged);
             ParametersManager.Instance.OnPreviewed.RemoveListener(ParametersManager_OnPreviewed);
-            ParametersManager.Instance.OnPreviewLeft.RemoveListener(ParametersManager_OnPreviewLeft);
+            ParametersManager.Instance.OnPreviewClosed.RemoveListener(ParametersManager_OnPreviewClosed);
         }
     }
 }
