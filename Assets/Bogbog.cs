@@ -4,14 +4,16 @@ using UnityEngine;
 public class Bogbog : MonoBehaviour
 {
     public SerializableDictionary<TraitData, GameObject> Attributes;
-    public Transform AssignedDestination;
-    public Transform AssignedSpot;
-    public bool IsAssignedToSpot => AssignedSpot != null;
     public float MetersPerSecond;
     public float MovementRotationAngle;
     public float MovementRotationDuration;
     public Animator Animator;
 
+    public Transform AssignedDestination;
+    public Transform AssignedSpot;
+    public bool IsDead;
+
+    public bool IsAssignedToSpot => AssignedSpot != null;
     public bool DestinationIsReached => (AssignedDestination.position - transform.position).sqrMagnitude < 0.1f;
 
     public void SetEnabledAttribute(bool is_enabled, TraitData traitData)
@@ -34,10 +36,9 @@ public class Bogbog : MonoBehaviour
 
     public void AssignSpot(Transform spot)
     {
-        transform.position = spot.position;
-
         if(spot != null)
         {
+            transform.position = spot.position;
             AssignedDestination = null;
         }
 
@@ -46,13 +47,13 @@ public class Bogbog : MonoBehaviour
 
     public void AssignDestination(Transform destination, bool instant = false)
     {
-        if(instant)
-        {
-            transform.position = destination.position;
-        }
-
         if(destination != null)
         {
+            if(instant)
+            {
+                transform.position = destination.position;
+            }
+
             AssignedSpot = null;
         }
 
@@ -91,6 +92,12 @@ public class Bogbog : MonoBehaviour
         {
             UpdateMovementAnimation();
         }
+    }
+
+    public void Kill()
+    {
+        Animator.enabled = false;
+        IsDead = true;
     }
 
     private void Awake()

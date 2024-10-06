@@ -10,16 +10,21 @@ public class BogbogsManager : Singleton<BogbogsManager>
     public SerializableDictionary<Transform, Bogbog> DestinationPoints;
     public FloatRange MinMaxDurationBeforeNextDestination;
     public FloatRange MinMaxReproductionProbabilityPerTick;
+    public FloatRange MinMaxDeathRatioPerTick;
     public Bogbog BogbogPrefab;
     public Transform BogbogContainer;
     public TraitData HornyTraitData;
+    public TraitData HurtTraitData;
 
+    public List<Bogbog> DeadBogbogs;
     public List<Bogbog> BogbogsBeforePreview;
+    public List<Bogbog> DeadBogbogsBeforePreview;
     public int MaxBogbogCount => DestinationPoints.Count - 1;
 
     public SerializableDictionary<Bogbog, float> NextDestinationAssignmentTimes;
 
     public UnityEvent OnBogbogCountChanged { get; } = new();
+    public UnityEvent<int> OnAllBogbogDead { get; } = new();
 
     public void SaveCurrentState()
     {
@@ -28,6 +33,14 @@ public class BogbogsManager : Singleton<BogbogsManager>
             Bogbog copy = Instantiate(bogbog, BogbogContainer);
             copy.name = "BogbogCopy";
             BogbogsBeforePreview.Add(copy);
+            copy.gameObject.SetActive(false);
+        }
+
+        foreach(Bogbog deadBogbog in DeadBogbogs)
+        {
+            Bogbog copy = Instantiate(deadBogbog, BogbogContainer);
+            copy.name = "BogbogCopy";
+            DeadBogbogsBeforePreview.Add(copy);
             copy.gameObject.SetActive(false);
         }
     }
@@ -41,7 +54,13 @@ public class BogbogsManager : Singleton<BogbogsManager>
             Destroy(bogbog.gameObject);
         }
 
+        foreach(Bogbog deadBogbog in DeadBogbogs)
+        {
+            Destroy(deadBogbog.gameObject);
+        }
+
         Bogbogs.Clear();
+        DeadBogbogs.Clear();
 
         foreach(Bogbog savedBogbog in BogbogsBeforePreview)
         {
@@ -50,7 +69,15 @@ public class BogbogsManager : Singleton<BogbogsManager>
             savedBogbog.gameObject.SetActive(true);
         }
 
+        foreach(Bogbog savedDeadBogbog in DeadBogbogsBeforePreview)
+        {
+            savedDeadBogbog.name = "Bogbog";
+            DeadBogbogs.Add(savedDeadBogbog);
+            savedDeadBogbog.gameObject.SetActive(true);
+        }
+
         BogbogsBeforePreview.Clear();
+        DeadBogbogsBeforePreview.Clear();
 
         if(previousCount != Bogbogs.Count)
         {
@@ -176,13 +203,53 @@ public class BogbogsManager : Singleton<BogbogsManager>
         DestinationPoints[destination] = null;
     }
 
-    public void TickReproduction(int tickCount)
+    public void TickDeath(int tickCount)
     {
-        if(Bogbogs.Count == MaxBogbogCount)
+        TraitInfo hurtTraitInfo = TraitsManager.Instance.Traits[HurtTraitData];
+
+        if(hurtTraitInfo.Status == ETraitStatus.NotPossessed || hurtTraitInfo.Status == ETraitStatus.Developing)
         {
             return;
         }
 
+        for(int tickIndex = 0; tickIndex < tickCount; tickIndex++)
+        {
+            if(Bogbogs.Count == 0)
+            {
+                OnAllBogbogDead.Invoke(ParametersManager.Instance.TotalTicksCounter - tickCount + Mathf.Max(0, tickIndex - 1));
+
+                return;
+            }
+
+            float deathRatio = MinMaxDeathRatioPerTick.RemapFrom(hurtTraitInfo.Value, 0.3f, 1f, must_clamp: true);
+            int deathCount = Mathf.CeilToInt(Bogbogs.Count * deathRatio);
+
+            for(int bogbogIndex = 0; bogbogIndex < deathCount; bogbogIndex++)
+            {
+                KillBogbog(Bogbogs[bogbogIndex]);
+            }
+        }
+    }
+
+    public void KillBogbog(Bogbog bogbog)
+    {
+        if(bogbog.IsAssignedToSpot)
+        {
+            AssignSpot(bogbog, null);
+        }
+        else
+        {
+            AssignDestination(bogbog, null);
+        }
+
+        bogbog.Kill();
+        Bogbogs.Remove(bogbog);
+        DeadBogbogs.Add(bogbog);
+        OnBogbogCountChanged.Invoke();
+    }
+
+    public void TickReproduction(int tickCount)
+    {
         TraitInfo hornyTraitInfo = TraitsManager.Instance.Traits[HornyTraitData];
 
         if(hornyTraitInfo.Status == ETraitStatus.NotPossessed || hornyTraitInfo.Status == ETraitStatus.Developing)
@@ -192,6 +259,11 @@ public class BogbogsManager : Singleton<BogbogsManager>
 
         for(int tickIndex = 0; tickIndex < tickCount; tickIndex++)
         {
+            if(Bogbogs.Count == MaxBogbogCount)
+            {
+                return;
+            }
+
             float probability = MinMaxReproductionProbabilityPerTick.RemapFrom(hornyTraitInfo.Value, 0.3f, 1f, must_clamp: true);
 
             if(Random.value < probability)
@@ -266,12 +338,14 @@ public class BogbogsManager : Singleton<BogbogsManager>
 
     private void ParametersManager_OnCommited(IReadOnlyDictionary<ParameterData, float> parameters, int tickCount)
     {
+        TickDeath(tickCount);
         TickReproduction(tickCount);
         AssignSpots();
     }
 
     private void ParametersManager_OnPreviewed(IReadOnlyDictionary<ParameterData, float> parameters, int tickCount)
     {
+        TickDeath(tickCount);
         TickReproduction(tickCount);
         AssignSpots();
     }
