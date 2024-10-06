@@ -1,4 +1,3 @@
-using System;
 using DG.Tweening;
 using UnityEngine;
 
@@ -6,11 +5,11 @@ public class Bogbog : MonoBehaviour
 {
     public SerializableDictionary<TraitData, GameObject> Attributes;
     public Transform AssignedDestination;
-    public bool IsAssignedToSpot;
+    public Transform AssignedSpot;
+    public bool IsAssignedToSpot => AssignedSpot != null;
     public float MetersPerSecond;
     public float MovementRotationAngle;
     public float MovementRotationDuration;
-    public SavedStateInfo SavedState;
 
     public bool DestinationIsReached => (AssignedDestination.position - transform.position).sqrMagnitude < 0.1f;
 
@@ -32,29 +31,16 @@ public class Bogbog : MonoBehaviour
         }
     }
 
-    public void SaveCurrentState()
-    {
-        SavedState = new SavedStateInfo
-        {
-            WasAssignedToSpot = IsAssignedToSpot,
-            Position = transform.position
-        };
-    }
-
-    public void RestorePreviousState()
-    {
-        if(SavedState.WasAssignedToSpot)
-        {
-            transform.position = SavedState.Position;
-        }
-
-        SavedState = default;
-    }
-
     public void AssignSpot(Transform spot)
     {
         transform.position = spot.position;
-        IsAssignedToSpot = true;
+
+        if(spot != null)
+        {
+            AssignedDestination = null;
+        }
+
+        AssignedSpot = spot;
     }
 
     public void AssignDestination(Transform destination, bool instant = false)
@@ -66,7 +52,7 @@ public class Bogbog : MonoBehaviour
 
         if(destination != null)
         {
-            IsAssignedToSpot = false;
+            AssignedSpot = null;
         }
 
         AssignedDestination = destination;
@@ -114,12 +100,5 @@ public class Bogbog : MonoBehaviour
     private void Update()
     {
         MoveToDestination();
-    }
-
-    [Serializable]
-    public struct SavedStateInfo
-    {
-        public bool WasAssignedToSpot;
-        public Vector3 Position;
     }
 }

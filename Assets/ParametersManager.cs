@@ -15,7 +15,7 @@ public class ParametersManager : Singleton<ParametersManager>
     public UnityEvent<IReadOnlyDictionary<ParameterData, float>, int> OnParametersChanged { get; } = new();
     public UnityEvent<IReadOnlyDictionary<ParameterData, float>, int> OnPreviewed { get; } = new();
     public UnityEvent OnPreviewLeft { get; } = new();
-    public UnityEvent OnCommited { get; } = new();
+    public UnityEvent<IReadOnlyDictionary<ParameterData, float>, int> OnCommited { get; } = new();
 
     public void SetParameters(IReadOnlyDictionary<ParameterData, float> parameters, int tickCount)
     {
@@ -68,6 +68,6 @@ public class ParametersManager : Singleton<ParametersManager>
         //handle fade in/out
         //potential defeat/win
         //stop post process
-        OnCommited.Invoke();
+        OnCommited.Invoke(parameters, tickCount);
     }
 }

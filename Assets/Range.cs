@@ -93,19 +93,35 @@ public class FloatRange : Range<float>
     public float RemapFrom(
         float input,
         float minimum_value = 0,
-        float maximum_value = 1
+        float maximum_value = 1,
+        bool must_clamp = false
         )
     {
-        return math.remap( minimum_value, maximum_value, _MinimumValue, _MaximumValue, input );
+        float output = math.remap( minimum_value, maximum_value, _MinimumValue, _MaximumValue, input );
+
+        if( must_clamp )
+        {
+            output = Mathf.Clamp( output, _MinimumValue, _MaximumValue );
+        }
+
+        return output;
     }
 
     public float RemapTo(
         float input,
         float minimum_value = 0,
-        float maximum_value = 1
+        float maximum_value = 1,
+        bool must_clamp = false
         )
     {
-        return math.remap( _MinimumValue, _MaximumValue, minimum_value, maximum_value, input );
+        float output = math.remap( _MinimumValue, _MaximumValue, minimum_value, maximum_value, input );
+
+        if( must_clamp )
+        {
+            output = Mathf.Clamp( output, minimum_value, maximum_value );
+        }
+
+        return output;
     }
 
     public float Clamp(

@@ -54,24 +54,18 @@ public class ParametersInterface : MonoBehaviour
         PreviewButton.interactable = ParametersManager.Instance.CurrentAttemptsCount < AttemptLights.Length;
     }
 
-    private void ParametersManager_OnParametersChanged(
-        IReadOnlyDictionary<ParameterData, float> parameters,
-        int tickCount
-        )
+    private void ParametersManager_OnParametersChanged(IReadOnlyDictionary<ParameterData, float> parameters, int tickCount)
     {
         RefreshKnobs();
     }
 
-    private void ParametersManager_OnPreviewed(
-        IReadOnlyDictionary<ParameterData, float> parameters,
-        int tickCount
-        )
+    private void ParametersManager_OnPreviewed(IReadOnlyDictionary<ParameterData, float> parameters, int tickCount)
     {
         RefreshAttemptLights();
         PreviewButton.interactable = false;
     }
 
-    private void ParametersManager_OnCommited()
+    private void ParametersManager_OnCommited(IReadOnlyDictionary<ParameterData, float> parameters, int tickCount)
     {
         RefreshAttemptLights();
     }
