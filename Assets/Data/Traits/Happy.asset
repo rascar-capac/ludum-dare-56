@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9ca924690241c246b9bae3b8ecb9a08, type: 3}
+  m_Name: Happy
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 0}
+  Name: Happy
+  Influences:
+  - Conditions:
+    - Type: {fileID: 11400000, guid: 8285a221d277e4a41a7c55b5c9c86a3f, type: 2}
+      IsRange: 1
+      Thresholds:
+        _MinimumValue: 0
+        _MaximumValue: 0.2
+    - Type: {fileID: 11400000, guid: 37eca958eab33ac43b489c80621a021e, type: 2}
+      IsRange: 1
+      Thresholds:
+        _MinimumValue: 0.3
+        _MaximumValue: 1
+    - Type: {fileID: 11400000, guid: 09da30ef622cf8544b2ba28f12d7ea8a, type: 2}
+      IsRange: 1
+      Thresholds:
+        _MinimumValue: 0.3
+        _MaximumValue: 1
+    InfluencePerTick: 0.1
+  InfluenceLossPerTick: 0.2

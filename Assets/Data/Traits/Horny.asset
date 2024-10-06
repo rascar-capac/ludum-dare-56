@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9ca924690241c246b9bae3b8ecb9a08, type: 3}
+  m_Name: Horny
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 0}
+  Name: Horny
+  Influences:
+  - Conditions:
+    - Type: {fileID: 11400000, guid: d0f02324c30162148acdf647a9171ff3, type: 2}
+      IsRange: 0
+      Thresholds:
+        _MinimumValue: 0.3
+        _MaximumValue: 1
+    InfluencePerTick: 0.1
+  - Conditions:
+    - Type: {fileID: 11400000, guid: 9994727f84a13d84da584c6aeb6ae9aa, type: 2}
+      IsRange: 0
+      Thresholds:
+        _MinimumValue: 0.8
+        _MaximumValue: 1
+    InfluencePerTick: 0.5
+  - Conditions:
+    - Type: {fileID: 11400000, guid: 8285a221d277e4a41a7c55b5c9c86a3f, type: 2}
+      IsRange: 1
+      Thresholds:
+        _MinimumValue: 0.8
+        _MaximumValue: 1
+    InfluencePerTick: 0.5
+  InfluenceLossPerTick: 0.3
