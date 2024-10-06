@@ -6,14 +6,14 @@ public class TraitIconsInterface : MonoBehaviour
     public TraitIcon TraitIconPrefab;
     public SerializableDictionary<TraitData, TraitIcon> TraitIcons;
 
-    private void TraitsManager_OnTraitStatusChanged(TraitData type, ETraitStatus status)
+    private void TraitsManager_OnTraitStatusChanged(TraitData type, ETraitStatus oldStatus, ETraitStatus newStatus)
     {
-        if(!TraitIcons.TryGetValue(type, out TraitIcon icon))
+        if(oldStatus == newStatus || !TraitIcons.TryGetValue(type, out TraitIcon icon))
         {
             return;
         }
 
-        icon.SetStatus(status);
+        icon.SetStatus(newStatus);
     }
 
     private void Awake()

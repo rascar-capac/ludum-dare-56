@@ -10,12 +10,12 @@ public class TraitIcon : MonoBehaviour
     public TMP_Text Text;
     public TraitData Data;
     public float BumpDuration;
-    public float GreatBumpDuration;
+    public Sprite UnknownTraitSprite;
 
     public void Initialize(TraitData data, TraitInfo info)
     {
         Data = data;
-        Icon.sprite = data.Icon;
+        Text.text = data.Name;
         SetStatus(info.Status, force: true);
     }
 
@@ -24,22 +24,20 @@ public class TraitIcon : MonoBehaviour
         if(force)
         {
             gameObject.SetActive(status != ETraitStatus.NotPossessed);
-            GreatBackground.transform.localScale = status == ETraitStatus.Great ? Vector3.one : Vector3.one * 0.7f;
         }
         else
         {
-            if(status == ETraitStatus.NotPossessed
-                && gameObject.activeSelf
-                )
+            if(status == ETraitStatus.NotPossessed)
             {
-                DOTween.Sequence()
-                    .Join(transform.DOScale(Vector3.zero, BumpDuration).SetEase(Ease.InBack))
-                    .Join(transform.DORotate(new Vector3(0, 0, 20f), BumpDuration).SetEase(Ease.InBack))
-                    .OnComplete(() => gameObject.SetActive(false));
+                if(gameObject.activeSelf)
+                {
+                    DOTween.Sequence()
+                        .Join(transform.DOScale(Vector3.zero, BumpDuration).SetEase(Ease.InBack))
+                        .Join(transform.DORotate(new Vector3(0, 0, 20f), BumpDuration).SetEase(Ease.InBack))
+                        .OnComplete(() => gameObject.SetActive(false));
+                }
             }
-            else if( status != ETraitStatus.NotPossessed
-                && !gameObject.activeSelf
-                )
+            else
             {
                 DOTween.Sequence()
                     .Join(transform.DOScale(Vector3.one, BumpDuration).SetEase(Ease.OutBack))
@@ -51,10 +49,10 @@ public class TraitIcon : MonoBehaviour
                         transform.rotation = Quaternion.Euler(0, 0, 20f);
                     });
             }
-
-            GreatBackground.transform.DOScale(status == ETraitStatus.Great ? Vector3.one : Vector3.one * 0.7f, GreatBumpDuration).SetEase(Ease.OutQuint);
         }
 
-        Text.text = status == ETraitStatus.Unknown ? "?" : Data.Name;
+        Icon.sprite = status == ETraitStatus.Unknown ? UnknownTraitSprite : Data.Icon;
+        Text.transform.parent.gameObject.SetActive(status != ETraitStatus.Unknown);
+        GreatBackground.SetActive(status == ETraitStatus.Great);
     }
 }

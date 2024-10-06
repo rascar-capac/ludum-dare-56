@@ -108,9 +108,9 @@ public class BogbogsManager : Singleton<BogbogsManager>
         DestinationPoints[destination] = null;
     }
 
-    private void TraitsManager_OnTraitStatusChanged(TraitData traitData, ETraitStatus status)
+    private void TraitsManager_OnTraitStatusChanged(TraitData traitData, ETraitStatus oldStatus, ETraitStatus newStatus)
     {
-        switch(status)
+        switch(newStatus)
         {
             case ETraitStatus.NotPossessed:
             {

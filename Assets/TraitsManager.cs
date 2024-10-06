@@ -11,7 +11,7 @@ public class TraitsManager : Singleton<TraitsManager>
     public float GreatTraitThreshold;
     public IReadOnlyDictionary<TraitData, TraitInfo> SavedTraits;
 
-    public UnityEvent<TraitData, ETraitStatus> OnTraitStatusChanged { get; } = new();
+    public UnityEvent<TraitData, ETraitStatus, ETraitStatus> OnTraitStatusChanged { get; } = new();
 
     [ContextMenu("Skip 1 tick")]
     public void RefreshTraits()
@@ -100,8 +100,9 @@ public class TraitsManager : Singleton<TraitsManager>
             traitInfo.Status = ETraitStatus.Great;
         }
 
+        ETraitStatus oldStatus = Traits[type].Status;
         Traits[type] = traitInfo;
-        OnTraitStatusChanged.Invoke(type, traitInfo.Status);
+        OnTraitStatusChanged.Invoke(type, oldStatus, traitInfo.Status);
     }
 
     private void ParametersManager_OnParametersChanged(

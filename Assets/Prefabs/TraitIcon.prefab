@@ -248,8 +248,9 @@ MonoBehaviour:
   Icon: {fileID: 3023639597518982818}
   Text: {fileID: 3285139760396467250}
   Data: {fileID: 0}
-  BumpDuration: 1.5
+  BumpDuration: 0.5
   GreatBumpDuration: 0.5
+  UnknownTraitSprite: {fileID: 21300000, guid: 1d1dde5e9a6891f4d8e8f7a750fb8b78, type: 3}
 --- !u!1 &8862606529748739269
 GameObject:
   m_ObjectHideFlags: 0
