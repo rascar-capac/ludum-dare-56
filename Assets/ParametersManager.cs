@@ -9,6 +9,7 @@ public class ParametersManager : Singleton<ParametersManager>
 
     public int CurrentAttemptsCount;
     public bool IsInPreview;
+    public IReadOnlyDictionary<ParameterData, float> PreviewParameters;
     public int TotalTicksCounter;
     public int SavedTotalTicksCounter;
 
@@ -39,11 +40,12 @@ public class ParametersManager : Singleton<ParametersManager>
         TryQuitPreview();
         CurrentAttemptsCount++;
         IsInPreview = true;
+        PreviewParameters = parameters;
 
         SavedTotalTicksCounter = TotalTicksCounter;
         TotalTicksCounter += tickCount;
         BogbogsManager.Instance.SaveCurrentState();
-        OnPreviewed.Invoke(parameters, tickCount);
+        OnPreviewed.Invoke(PreviewParameters, tickCount);
         //post process
     }
 
@@ -55,6 +57,7 @@ public class ParametersManager : Singleton<ParametersManager>
         }
 
         IsInPreview = false;
+        PreviewParameters = null;
 
         TotalTicksCounter = SavedTotalTicksCounter;
         BogbogsManager.Instance.RestorePreviousState();
@@ -62,17 +65,23 @@ public class ParametersManager : Singleton<ParametersManager>
         //post process
     }
 
-    public void Commit(IReadOnlyDictionary<ParameterData, float> parameters, int tickCount)
+    public void Commit(int tickCount)
     {
+        if(!IsInPreview)
+        {
+            return;
+        }
+
+        IReadOnlyDictionary<ParameterData, float> previewParameters = PreviewParameters;
         TryQuitPreview();
-        SetParameters(parameters, tickCount);
+        SetParameters(previewParameters, tickCount);
         CurrentAttemptsCount = 0;
         TotalTicksCounter += tickCount;
 
         //handle fade in/out
         //potential defeat/win
         //stop post process
-        OnCommited.Invoke(parameters, tickCount);
+        OnCommited.Invoke(previewParameters, tickCount);
     }
 
     public override void Awake()

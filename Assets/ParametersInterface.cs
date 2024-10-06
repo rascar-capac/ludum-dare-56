@@ -41,7 +41,7 @@ public class ParametersInterface : MonoBehaviour
 
     public void Commit()
     {
-        ParametersManager.Instance.Commit(CurrentParameters, DurationSetter.SelectedValue);
+        ParametersManager.Instance.Commit(DurationSetter.SelectedValue);
     }
 
     private void Knob_OnValueChanged()
@@ -63,11 +63,13 @@ public class ParametersInterface : MonoBehaviour
     {
         RefreshAttemptLights();
         PreviewButton.interactable = false;
+        CommitButton.interactable = true;
     }
 
     private void ParametersManager_OnCommited(IReadOnlyDictionary<ParameterData, float> parameters, int tickCount)
     {
         RefreshAttemptLights();
+        CommitButton.interactable = false;
     }
 
     private void PreviewButton_OnClick()
@@ -93,6 +95,8 @@ public class ParametersInterface : MonoBehaviour
         }
 
         RefreshKnobs();
+
+        CommitButton.interactable = false;
 
         PreviewButton.onClick.AddListener(PreviewButton_OnClick);
         CommitButton.onClick.AddListener(CommitButton_OnClick);
