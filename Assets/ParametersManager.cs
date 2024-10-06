@@ -5,6 +5,7 @@ using UnityEngine.Events;
 public class ParametersManager : Singleton<ParametersManager>
 {
     public SerializableDictionary<ParameterData, float> Parameters;
+    public IntegerRange MinMaxTickCount;
     public int CurrentAttemptsCount;
     public bool IsInPreview;
     public IReadOnlyDictionary<ParameterData, float> PreviewParameters;

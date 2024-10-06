@@ -17,10 +17,37 @@ public class DurationSetter : MonoBehaviour
 
     public void RefreshValues(int selectedValue)
     {
-        SelectedValue = selectedValue;
+        IntegerRange minMaxTickCount = ParametersManager.Instance.MinMaxTickCount;
+        SelectedValue = minMaxTickCount.Clamp(selectedValue);
         SelectedValueText.text = SelectedValue.ToString();
-        PreviousValueText.text = (SelectedValue - 1).ToString();
-        NextValueText.text = (SelectedValue + 1).ToString();
+
+        int previousValue = SelectedValue - 1;
+
+        if(previousValue < minMaxTickCount.MinimumValue)
+        {
+            PreviousValueText.enabled = false;
+            PreviousButton.interactable = false;
+        }
+        else
+        {
+            PreviousValueText.enabled = true;
+            PreviousButton.interactable = true;
+            PreviousValueText.text = previousValue.ToString();
+        }
+
+        int nextValue = SelectedValue + 1;
+
+        if(nextValue > minMaxTickCount.MaximumValue)
+        {
+            NextValueText.enabled = false;
+            NextButton.interactable = false;
+        }
+        else
+        {
+            NextValueText.enabled = true;
+            NextButton.interactable = true;
+            NextValueText.text = nextValue.ToString();
+        }
     }
 
     private void PreviousButton_OnClick()
@@ -37,7 +64,7 @@ public class DurationSetter : MonoBehaviour
 
     private void Awake()
     {
-        RefreshValues(0);
+        RefreshValues(1);
 
         PreviousButton.onClick.AddListener(PreviousButton_OnClick);
         NextButton.onClick.AddListener(NextButton_OnClick);

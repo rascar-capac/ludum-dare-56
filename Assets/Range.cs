@@ -53,6 +53,13 @@ public class IntegerRange : Range<int>
         return MinimumValue <= value_to_check
             && value_to_check < MaximumValue;
     }
+
+    public int Clamp(
+        int input
+        )
+    {
+        return Mathf.Clamp(input, MinimumValue, MaximumValue);
+    }
 }
 
 [System.Serializable]
@@ -99,6 +106,13 @@ public class FloatRange : Range<float>
         )
     {
         return math.remap( _MinimumValue, _MaximumValue, minimum_value, maximum_value, input );
+    }
+
+    public float Clamp(
+        float input
+        )
+    {
+        return Mathf.Clamp(input, MinimumValue, MaximumValue);
     }
 }
 
