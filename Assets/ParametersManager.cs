@@ -1,17 +1,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.Events;
+using UnityEngine.Rendering;
+using DG.Tweening;
 
 public class ParametersManager : Singleton<ParametersManager>
 {
     public SerializableDictionary<ParameterData, float> Parameters;
     public IntegerRange MinMaxTickCount;
+    public Volume Volume;
+    public VolumeProfile DefaultProfile;
+    public VolumeProfile PreviewProfile;
 
     public int CurrentAttemptsCount;
     public bool IsInPreview;
     public IReadOnlyDictionary<ParameterData, float> PreviewParameters;
     public int TotalTicksCounter;
     public int SavedTotalTicksCounter;
+    public Tween VolumeTween;
 
     public UnityEvent<IReadOnlyDictionary<ParameterData, float>, int> OnParametersChanged { get; } = new();
     public UnityEvent<IReadOnlyDictionary<ParameterData, float>, int> OnPreviewed { get; } = new();
@@ -37,7 +43,21 @@ public class ParametersManager : Singleton<ParametersManager>
             return;
         }
 
-        TryQuitPreview();
+        VolumeTween.Kill();
+
+        if(IsInPreview)
+        {
+            Volume.profile = PreviewProfile;
+            Volume.weight = 1f;
+        }
+        else
+        {
+            Volume.profile = PreviewProfile;
+            Volume.weight = 0.2f;
+            VolumeTween = DOTween.To(() => Volume.weight, x => Volume.weight = x, 1f, 0.5f).SetEase(Ease.OutQuint);
+        }
+
+        TryQuitPreview(applyVolumeEffect: false);
         CurrentAttemptsCount++;
         IsInPreview = true;
         PreviewParameters = parameters;
@@ -46,10 +66,9 @@ public class ParametersManager : Singleton<ParametersManager>
         TotalTicksCounter += tickCount;
         BogbogsManager.Instance.SaveCurrentState();
         OnPreviewed.Invoke(PreviewParameters, tickCount);
-        //post process
     }
 
-    public void TryQuitPreview()
+    public void TryQuitPreview(bool applyVolumeEffect = true)
     {
         if(!IsInPreview)
         {
@@ -61,8 +80,20 @@ public class ParametersManager : Singleton<ParametersManager>
 
         TotalTicksCounter = SavedTotalTicksCounter;
         BogbogsManager.Instance.RestorePreviousState();
+
+        if(applyVolumeEffect)
+        {
+            VolumeTween.Kill();
+            VolumeTween = DOTween.To(() => Volume.weight, x => Volume.weight = x, 0.2f, 0.5f)
+                .SetEase(Ease.InQuint)
+                .OnComplete(() =>
+                {
+                    Volume.profile = DefaultProfile;
+                    Volume.weight = 1f;
+                });
+        }
+
         OnPreviewLeft.Invoke();
-        //post process
     }
 
     public void Commit(int tickCount)
@@ -89,5 +120,6 @@ public class ParametersManager : Singleton<ParametersManager>
         base.Awake();
 
         TotalTicksCounter = 1;
+        Volume.profile = DefaultProfile;
     }
 }
