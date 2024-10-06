@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ public class Bogbog : MonoBehaviour
     public float MetersPerSecond;
     public float MovementRotationAngle;
     public float MovementRotationDuration;
+    public SavedStateInfo SavedState;
 
     public bool DestinationIsReached => (AssignedDestination.position - transform.position).sqrMagnitude < 0.1f;
 
@@ -32,12 +34,21 @@ public class Bogbog : MonoBehaviour
 
     public void SaveCurrentState()
     {
-        //save position
+        SavedState = new SavedStateInfo
+        {
+            WasAssignedToSpot = IsAssignedToSpot,
+            Position = transform.position
+        };
     }
 
     public void RestorePreviousState()
     {
-        //restore position
+        if(SavedState.WasAssignedToSpot)
+        {
+            transform.position = SavedState.Position;
+        }
+
+        SavedState = default;
     }
 
     public void AssignSpot(Transform spot)
@@ -103,5 +114,12 @@ public class Bogbog : MonoBehaviour
     private void Update()
     {
         MoveToDestination();
+    }
+
+    [Serializable]
+    public struct SavedStateInfo
+    {
+        public bool WasAssignedToSpot;
+        public Vector3 Position;
     }
 }
