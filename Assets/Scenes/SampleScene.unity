@@ -293,11 +293,12 @@ MonoBehaviour:
   Parameters:
     KeyValueList:
     - Key: {fileID: 11400000, guid: b365434c078a85d4b9a5a6fb2afe35ab, type: 2}
-      Value: 0.5
+      Value: 0
     - Key: {fileID: 11400000, guid: 09da30ef622cf8544b2ba28f12d7ea8a, type: 2}
       Value: 0
     - Key: {fileID: 11400000, guid: 37eca958eab33ac43b489c80621a021e, type: 2}
-      Value: 1
+      Value: 0
+  CurrentAttemptsCount: 0
 --- !u!4 &530268931
 Transform:
   m_ObjectHideFlags: 0

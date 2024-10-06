@@ -9,33 +9,34 @@ public class TraitsManager : Singleton<TraitsManager>
     public SerializableDictionary<TraitData, TraitInfo> Traits;
     public float UnknownTraitThreshold;
     public float GreatTraitThreshold;
+    public IReadOnlyDictionary<TraitData, TraitInfo> SavedTraits;
 
     public UnityEvent<TraitData, ETraitStatus> OnTraitStatusChanged { get; } = new();
 
     [ContextMenu("Skip 1 tick")]
     public void RefreshTraits()
     {
-        RefreshTraits(1);
+        RefreshTraits(1, ParametersManager.Instance.Parameters);
     }
 
-    public void RefreshTraits(int tickCount)
+    public void RefreshTraits(int tickCount, IReadOnlyDictionary<ParameterData, float> parameters)
     {
         List<TraitData> traitTypes = Traits.Keys.ToList();
 
         foreach(TraitData type in traitTypes)
         {
-            RefreshTrait(type, tickCount);
+            RefreshTrait(type, tickCount, parameters);
         }
     }
 
-    public void RefreshTrait(TraitData type, int tickCount)
+    public void RefreshTrait(TraitData type, int tickCount, IReadOnlyDictionary<ParameterData, float> parameters)
     {
         float totalInfluenceRatio = 0f;
         bool anyInfluenceGroupIsFulfilled = false;
 
         foreach(InfluenceGroup influenceGroup in type.Influences)
         {
-            float influenceGroupRatio = ComputeInfluenceGroupRatio01(influenceGroup);
+            float influenceGroupRatio = ComputeInfluenceGroupRatio01(influenceGroup, parameters);
 
             if(influenceGroupRatio > 0)
             {
@@ -57,13 +58,13 @@ public class TraitsManager : Singleton<TraitsManager>
         RefreshTraitStatus(type);
     }
 
-    public float ComputeInfluenceGroupRatio01(InfluenceGroup group)
+    public float ComputeInfluenceGroupRatio01(InfluenceGroup group, IReadOnlyDictionary<ParameterData, float> parameters)
     {
         float totalInfluenceRatio = 1f;
 
         foreach(Condition condition in group.Conditions)
         {
-            float influenceRatio = condition.GetInfluenceRatio01();
+            float influenceRatio = condition.GetInfluenceRatio01(parameters);
 
             totalInfluenceRatio *= influenceRatio;
         }
@@ -101,6 +102,47 @@ public class TraitsManager : Singleton<TraitsManager>
 
         Traits[type] = traitInfo;
         OnTraitStatusChanged.Invoke(type, traitInfo.Status);
+    }
+
+    private void ParametersManager_OnParametersChanged(
+        IReadOnlyDictionary<ParameterData, float> parameters
+        )
+    {
+        RefreshTraits(1, parameters);
+    }
+
+    private void ParametersManager_OnPreviewed(
+        IReadOnlyDictionary<ParameterData, float> parameters
+        )
+    {
+        SavedTraits = new Dictionary<TraitData, TraitInfo>(Traits);
+        RefreshTraits(1, parameters);
+    }
+
+    private void ParametersManager_OnPreviewLeft()
+    {
+        Traits = new(SavedTraits.ToDictionary(trait => trait.Key, trait => trait.Value));
+    }
+
+    public override void Awake()
+    {
+        base.Awake();
+
+        ParametersManager.Instance.OnParametersChanged.AddListener(ParametersManager_OnParametersChanged);
+        ParametersManager.Instance.OnPreviewed.AddListener(ParametersManager_OnPreviewed);
+        ParametersManager.Instance.OnPreviewLeft.AddListener(ParametersManager_OnPreviewLeft);
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        if(ParametersManager.HasInstance)
+        {
+            ParametersManager.Instance.OnParametersChanged.RemoveListener(ParametersManager_OnParametersChanged);
+            ParametersManager.Instance.OnPreviewed.RemoveListener(ParametersManager_OnPreviewed);
+            ParametersManager.Instance.OnPreviewLeft.RemoveListener(ParametersManager_OnPreviewLeft);
+        }
     }
 }
 

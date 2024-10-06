@@ -33,6 +33,22 @@ public class BogbogsManager : Singleton<BogbogsManager>
         }
     }
 
+    public void SaveCurrentState()
+    {
+        foreach(Bogbog bogbog in Bogbogs)
+        {
+            bogbog.SaveCurrentState();
+        }
+    }
+
+    public void RestorePreviousState()
+    {
+        foreach(Bogbog bogbog in Bogbogs)
+        {
+            bogbog.RestorePreviousState();
+        }
+    }
+
     public override void Awake()
     {
         base.Awake();

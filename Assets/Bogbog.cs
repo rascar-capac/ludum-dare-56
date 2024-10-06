@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public class Bogbog : MonoBehaviour
@@ -20,6 +21,16 @@ public class Bogbog : MonoBehaviour
         {
             attribute.SetActive(is_enabled);
         }
+    }
+
+    public void SaveCurrentState()
+    {
+        //save position
+    }
+
+    public void RestorePreviousState()
+    {
+        //restore position
     }
 
     private void Awake()
