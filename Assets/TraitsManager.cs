@@ -7,7 +7,7 @@ using UnityEngine.Events;
 public class TraitsManager : Singleton<TraitsManager>
 {
     public SerializableDictionary<TraitData, TraitInfo> Traits;
-    public float UnknownTraitThreshold;
+    public float DevelopingTraitThreshold;
     public float GreatTraitThreshold;
     public IReadOnlyDictionary<TraitData, TraitInfo> SavedTraits;
 
@@ -80,20 +80,13 @@ public class TraitsManager : Singleton<TraitsManager>
         {
             traitInfo.Status = ETraitStatus.NotPossessed;
         }
-        else if(traitInfo.Value < UnknownTraitThreshold)
+        else if(traitInfo.Value < DevelopingTraitThreshold)
         {
-            if(!traitInfo.HasBeenDiscovered)
-            {
-                traitInfo.Status = ETraitStatus.Unknown;
-            }
-            else
-            {
-                traitInfo.Status = ETraitStatus.Discovered;
-            }
+            traitInfo.Status = ETraitStatus.Developing;
         }
         else if(traitInfo.Value < GreatTraitThreshold)
         {
-            traitInfo.Status = ETraitStatus.Discovered;
+            traitInfo.Status = ETraitStatus.Possessed;
         }
         else
         {
@@ -153,14 +146,13 @@ public class TraitsManager : Singleton<TraitsManager>
 public struct TraitInfo
 {
     public float Value;
-    public bool HasBeenDiscovered;
     public ETraitStatus Status;
 }
 
 public enum ETraitStatus
 {
     NotPossessed = 0,
-    Unknown = 1,
-    Discovered = 2,
+    Developing = 1,
+    Possessed = 2,
     Great = 3,
 }

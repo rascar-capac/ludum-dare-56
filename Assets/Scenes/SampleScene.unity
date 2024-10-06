@@ -502,24 +502,20 @@ MonoBehaviour:
     - Key: {fileID: 11400000, guid: 8285a221d277e4a41a7c55b5c9c86a3f, type: 2}
       Value:
         Value: 0
-        HasBeenDiscovered: 0
         Status: 0
     - Key: {fileID: 11400000, guid: 9994727f84a13d84da584c6aeb6ae9aa, type: 2}
       Value:
         Value: 0
-        HasBeenDiscovered: 0
         Status: 0
     - Key: {fileID: 11400000, guid: d0f02324c30162148acdf647a9171ff3, type: 2}
       Value:
         Value: 0
-        HasBeenDiscovered: 0
         Status: 0
     - Key: {fileID: 11400000, guid: 4b2ca4cfc4d9cb24c84b8541f96f565d, type: 2}
       Value:
         Value: 0
-        HasBeenDiscovered: 0
         Status: 0
-  UnknownTraitThreshold: 0.3
+  DevelopingTraitThreshold: 0.3
   GreatTraitThreshold: 0.7
 --- !u!4 &926009049
 Transform:

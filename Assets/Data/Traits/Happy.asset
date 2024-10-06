@@ -20,7 +20,7 @@ MonoBehaviour:
       IsRange: 1
       Thresholds:
         _MinimumValue: 0
-        _MaximumValue: 0.2
+        _MaximumValue: 0.3
     - Type: {fileID: 11400000, guid: 37eca958eab33ac43b489c80621a021e, type: 2}
       IsRange: 1
       Thresholds:

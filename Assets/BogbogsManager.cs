@@ -113,13 +113,13 @@ public class BogbogsManager : Singleton<BogbogsManager>
         switch(newStatus)
         {
             case ETraitStatus.NotPossessed:
+            case ETraitStatus.Developing:
             {
                 SetEnabledAttribute(false, traitData);
 
                 break;
             }
-            case ETraitStatus.Unknown:
-            case ETraitStatus.Discovered:
+            case ETraitStatus.Possessed:
             case ETraitStatus.Great:
             {
                 SetEnabledAttribute(true, traitData);

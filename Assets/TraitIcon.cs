@@ -51,8 +51,8 @@ public class TraitIcon : MonoBehaviour
             }
         }
 
-        Icon.sprite = status == ETraitStatus.Unknown ? UnknownTraitSprite : Data.Icon;
-        Text.transform.parent.gameObject.SetActive(status != ETraitStatus.Unknown);
+        Icon.sprite = status == ETraitStatus.Developing ? UnknownTraitSprite : Data.Icon;
+        Text.transform.parent.gameObject.SetActive(status != ETraitStatus.Developing);
         GreatBackground.SetActive(status == ETraitStatus.Great);
     }
 }

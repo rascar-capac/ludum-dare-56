@@ -11,6 +11,11 @@ public class Condition
 
     public float GetInfluenceRatio01(IReadOnlyDictionary<ParameterData, float> parameters)
     {
+        if(Type is TraitData traitType && (TraitsManager.Instance.Traits[traitType].Status == ETraitStatus.NotPossessed || TraitsManager.Instance.Traits[traitType].Status == ETraitStatus.Developing))
+        {
+            return 0;
+        }
+
         if(IsRange)
         {
             return Thresholds.Contains(GetParameterValue(parameters)) ? 1 : 0;
@@ -25,8 +30,8 @@ public class Condition
     {
         return Type switch
         {
-            ParameterData parameter_data => parameters[parameter_data],
-            TraitData trait_data => TraitsManager.Instance.Traits[trait_data].Value,
+            ParameterData parameterType => parameters[parameterType],
+            TraitData traitType => TraitsManager.Instance.Traits[traitType].Value,
             _ => throw new NotImplementedException()
         };
     }
