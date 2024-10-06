@@ -6,9 +6,9 @@ public class TraitIconsInterface : MonoBehaviour
     public TraitIcon TraitIconPrefab;
     public SerializableDictionary<TraitData, TraitIcon> TraitIcons;
 
-    private void TraitsManager_OnTraitStatusChanged(TraitData type, ETraitStatus status)
+    private void TraitsManager_OnTraitStatusChanged(TraitData data, ETraitStatus status)
     {
-        if(!TraitIcons.TryGetValue(type, out TraitIcon icon))
+        if(!TraitIcons.TryGetValue(data, out TraitIcon icon) || data.IsHidden)
         {
             return;
         }

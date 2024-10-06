@@ -14,9 +14,9 @@ public class Bogbog : MonoBehaviour
 
     public bool DestinationIsReached => (AssignedDestination.position - transform.position).sqrMagnitude < 0.1f;
 
-    public void SetEnabledAttribute(bool is_enabled, TraitData traitType)
+    public void SetEnabledAttribute(bool is_enabled, TraitData traitData)
     {
-        if(!Attributes.TryGetValue(traitType, out GameObject attribute))
+        if(!Attributes.TryGetValue(traitData, out GameObject attribute) || traitData.IsHidden)
         {
             return;
         }
