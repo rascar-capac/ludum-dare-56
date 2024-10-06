@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ public class DaysCounter : MonoBehaviour
     public void Refresh()
     {
         Counter.text = ParametersManager.Instance.TotalTicksCounter.ToString();
+        Counter.transform.DOPunchScale(Vector3.one * 0.2f, 0.4f);
     }
 
     private void ParametersManager_OnPreviewed(IReadOnlyDictionary<ParameterData, float> parameters, int tickCount)

@@ -34,6 +34,8 @@ public class BogbogsManager : Singleton<BogbogsManager>
 
     public void RestorePreviousState()
     {
+        int previousCount = Bogbogs.Count;
+
         foreach(Bogbog bogbog in Bogbogs)
         {
             Destroy(bogbog.gameObject);
@@ -50,7 +52,10 @@ public class BogbogsManager : Singleton<BogbogsManager>
 
         BogbogsBeforePreview.Clear();
 
-        OnBogbogCountChanged.Invoke();
+        if(previousCount != Bogbogs.Count)
+        {
+            OnBogbogCountChanged.Invoke();
+        }
     }
 
     public void AssignSpots()

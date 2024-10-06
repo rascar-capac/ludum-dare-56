@@ -1,3 +1,4 @@
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ public class BogbogsCounter : MonoBehaviour
     public void Refresh()
     {
         Counter.text = $"{BogbogsManager.Instance.Bogbogs.Count}/{BogbogsManager.Instance.MaxBogbogCount}";
+        Counter.transform.DOPunchScale(Vector3.one * 0.2f, 0.4f);
     }
 
     private void BogbogsManager_OnBogbogCountChanged()
