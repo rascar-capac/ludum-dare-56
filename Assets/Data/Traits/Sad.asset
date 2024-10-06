@@ -13,7 +13,14 @@ MonoBehaviour:
   m_Name: Sad
   m_EditorClassIdentifier: 
   Icon: {fileID: 0}
-  Name: 
-  Influences: []
-  InfluenceLossPerTick: 0
+  Name: Sad
+  Influences:
+  - Conditions:
+    - Type: {fileID: 11400000, guid: 09da30ef622cf8544b2ba28f12d7ea8a, type: 2}
+      IsRange: 0
+      Thresholds:
+        _MinimumValue: 0.3
+        _MaximumValue: 0
+    InfluencePerTick: 0.2
+  InfluenceLossPerTick: 0.2
   IsHidden: 0

@@ -31,5 +31,11 @@ MonoBehaviour:
       Thresholds:
         _MinimumValue: 0.3
         _MaximumValue: 1
+    - Type: {fileID: 11400000}
+      IsRange: 1
+      Thresholds:
+        _MinimumValue: 0.5
+        _MaximumValue: 1
     InfluencePerTick: 0.1
   InfluenceLossPerTick: 0.2
+  IsHidden: 0

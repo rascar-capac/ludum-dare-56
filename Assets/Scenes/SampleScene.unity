@@ -568,7 +568,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -70, y: -43.2}
+  m_AnchoredPosition: {x: -70, y: -43.19995}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &595381362
@@ -828,6 +828,10 @@ MonoBehaviour:
   Traits:
     KeyValueList:
     - Key: {fileID: 11400000, guid: 8285a221d277e4a41a7c55b5c9c86a3f, type: 2}
+      Value:
+        Value: 0
+        Status: 0
+    - Key: {fileID: 11400000, guid: bcc1accb58cbadf4ab2fbe0ecb7acf76, type: 2}
       Value:
         Value: 0
         Status: 0
@@ -1242,10 +1246,16 @@ MonoBehaviour:
   MinMaxReproductionProbabilityPerTick:
     _MinimumValue: 0.3
     _MaximumValue: 1
+  MinMaxDeathRatioPerTick:
+    _MinimumValue: 0.1
+    _MaximumValue: 0
   BogbogPrefab: {fileID: 3890264418316016364, guid: 3c4aee5a36fe86a46b355fc96e3fddd4, type: 3}
   BogbogContainer: {fileID: 797953481}
   HornyTraitData: {fileID: 11400000, guid: 4b2ca4cfc4d9cb24c84b8541f96f565d, type: 2}
+  HurtTraitData: {fileID: 11400000, guid: bcc1accb58cbadf4ab2fbe0ecb7acf76, type: 2}
+  DeadBogbogs: []
   BogbogsBeforePreview: []
+  DeadBogbogsBeforePreview: []
   NextDestinationAssignmentTimes:
     KeyValueList: []
 --- !u!4 &1901559774

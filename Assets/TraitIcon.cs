@@ -11,15 +11,20 @@ public class TraitIcon : MonoBehaviour
     public TraitData Data;
     public float BumpDuration;
     public Sprite UnknownTraitSprite;
+    public Image FluctuationIcon;
+    public Sprite IncreasingSprite;
+    public Sprite DecreasingSprite;
+    public Sprite StagnatingSprite;
+    public float StagnationThreshold;
 
     public void Initialize(TraitData data, TraitInfo info)
     {
         Data = data;
         Text.text = data.Name;
-        SetStatus(info.Status, force: true);
+        RefreshStatus(info.Status, force: true);
     }
 
-    public void SetStatus(ETraitStatus status, bool force = false)
+    public void RefreshStatus(ETraitStatus status, bool force = false)
     {
         if(force)
         {
@@ -54,5 +59,17 @@ public class TraitIcon : MonoBehaviour
         Icon.sprite = status == ETraitStatus.Developing ? UnknownTraitSprite : Data.Icon;
         Text.transform.parent.gameObject.SetActive(status != ETraitStatus.Developing);
         GreatBackground.SetActive(status == ETraitStatus.Great);
+    }
+
+    public void RefreshFluctuation(float difference)
+    {
+        if(Mathf.Abs(difference) < StagnationThreshold)
+        {
+            FluctuationIcon.sprite = StagnatingSprite;
+        }
+        else
+        {
+            FluctuationIcon.sprite = difference > 0 ? IncreasingSprite : DecreasingSprite;
+        }
     }
 }

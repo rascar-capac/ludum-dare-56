@@ -12,6 +12,7 @@ public class TraitsManager : Singleton<TraitsManager>
     public IReadOnlyDictionary<TraitData, TraitInfo> SavedTraits;
 
     public UnityEvent<TraitData, ETraitStatus> OnTraitStatusChanged { get; } = new();
+    public UnityEvent<TraitData, float, float> OnTraitValueChanged { get; } = new();
 
     [ContextMenu("Skip 1 tick")]
     public void RefreshTraits()
@@ -51,9 +52,15 @@ public class TraitsManager : Singleton<TraitsManager>
             totalInfluenceRatio = tickCount * -type.InfluenceLossPerTick;
         }
 
+        float oldValue = Traits[type].Value;
         TraitInfo traitInfo = Traits[type];
         traitInfo.Value = Mathf.Clamp01(traitInfo.Value + totalInfluenceRatio);
         Traits[type] = traitInfo;
+
+        if(traitInfo.Value != oldValue)
+        {
+            OnTraitValueChanged.Invoke(type, oldValue, traitInfo.Value);
+        }
 
         RefreshTraitStatus(type);
     }

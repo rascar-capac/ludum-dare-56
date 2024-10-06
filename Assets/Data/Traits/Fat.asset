@@ -13,7 +13,14 @@ MonoBehaviour:
   m_Name: Fat
   m_EditorClassIdentifier: 
   Icon: {fileID: 0}
-  Name: 
-  Influences: []
-  InfluenceLossPerTick: 0
+  Name: Fat
+  Influences:
+  - Conditions:
+    - Type: {fileID: 11400000, guid: b365434c078a85d4b9a5a6fb2afe35ab, type: 2}
+      IsRange: 0
+      Thresholds:
+        _MinimumValue: 0.7
+        _MaximumValue: 1
+    InfluencePerTick: 0.3
+  InfluenceLossPerTick: 0.4
   IsHidden: 0

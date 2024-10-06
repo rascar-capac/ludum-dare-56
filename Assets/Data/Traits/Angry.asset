@@ -16,11 +16,11 @@ MonoBehaviour:
   Name: Angry
   Influences:
   - Conditions:
-    - Type: {fileID: 11400000, guid: 09da30ef622cf8544b2ba28f12d7ea8a, type: 2}
+    - Type: {fileID: 11400000, guid: b365434c078a85d4b9a5a6fb2afe35ab, type: 2}
       IsRange: 0
       Thresholds:
         _MinimumValue: 0.3
         _MaximumValue: 0
     InfluencePerTick: 0.3
-  InfluenceLossPerTick: 0.1
+  InfluenceLossPerTick: 0.3
   IsHidden: 0

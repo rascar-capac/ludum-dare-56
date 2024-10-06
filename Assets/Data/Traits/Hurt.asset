@@ -21,13 +21,20 @@ MonoBehaviour:
       Thresholds:
         _MinimumValue: 0.7
         _MaximumValue: 1
-    InfluencePerTick: 0
+    InfluencePerTick: 0.4
   - Conditions:
     - Type: {fileID: 11400000, guid: 37eca958eab33ac43b489c80621a021e, type: 2}
       IsRange: 0
       Thresholds:
         _MinimumValue: 0.3
         _MaximumValue: 0
-    InfluencePerTick: 0
+    InfluencePerTick: 0.2
+  - Conditions:
+    - Type: {fileID: 11400000, guid: b365434c078a85d4b9a5a6fb2afe35ab, type: 2}
+      IsRange: 0
+      Thresholds:
+        _MinimumValue: 0.3
+        _MaximumValue: 0
+    InfluencePerTick: 0.2
   InfluenceLossPerTick: 1
   IsHidden: 1
