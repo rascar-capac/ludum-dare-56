@@ -9,6 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb3fc7f7bfce05149a0f130f1b806906, type: 3}
-  m_Name: Humidity
+  m_Script: {fileID: 11500000, guid: a9ca924690241c246b9bae3b8ecb9a08, type: 3}
+  m_Name: Sad
   m_EditorClassIdentifier: 
+  Icon: {fileID: 0}
+  Name: 
+  Influences: []
+  InfluenceLossPerTick: 0
+  IsHidden: 0

@@ -8,4 +8,5 @@ public class TraitData : AConditionData
     public string Name;
     public List<InfluenceGroup> Influences;
     public float InfluenceLossPerTick;
+    public bool IsHidden;
 }

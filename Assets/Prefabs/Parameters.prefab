@@ -599,11 +599,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 171568883174981235, guid: 36201f741f9696f4785ac32e29393425, type: 3}
       propertyPath: m_Name
-      value: Knob_Humidity
+      value: Knob_Food
       objectReference: {fileID: 0}
     - target: {fileID: 3978721996737915302, guid: 36201f741f9696f4785ac32e29393425, type: 3}
       propertyPath: m_text
-      value: Humidity
+      value: Food
       objectReference: {fileID: 0}
     - target: {fileID: 4979702203881174698, guid: 36201f741f9696f4785ac32e29393425, type: 3}
       propertyPath: m_Pivot.x
