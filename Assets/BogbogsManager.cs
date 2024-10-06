@@ -257,6 +257,11 @@ public class BogbogsManager : Singleton<BogbogsManager>
             return;
         }
 
+        if(Bogbogs.Count < 2)
+        {
+            return;
+        }
+
         for(int tickIndex = 0; tickIndex < tickCount; tickIndex++)
         {
             if(Bogbogs.Count == MaxBogbogCount)
