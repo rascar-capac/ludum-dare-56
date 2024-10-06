@@ -11,6 +11,7 @@ public class ParametersInterface : MonoBehaviour
     public Image[] AttemptLights;
     public Sprite AttemptOffSprite;
     public Sprite AttemptOnSprite;
+    public DurationSetter DurationSetter;
 
     public IReadOnlyDictionary<ParameterData, float> CurrentParameters => Knobs.ToDictionary(knob => knob.Key, knob => knob.Value.CurrentValue);
 
@@ -35,12 +36,12 @@ public class ParametersInterface : MonoBehaviour
 
     public void Preview()
     {
-        ParametersManager.Instance.Preview(CurrentParameters);
+        ParametersManager.Instance.Preview(CurrentParameters, DurationSetter.SelectedValue);
     }
 
     public void Commit()
     {
-        ParametersManager.Instance.Commit(CurrentParameters);
+        ParametersManager.Instance.Commit(CurrentParameters, DurationSetter.SelectedValue);
     }
 
     private void Knob_OnValueChanged()
@@ -48,15 +49,22 @@ public class ParametersInterface : MonoBehaviour
         PreviewButton.interactable = ParametersManager.Instance.CurrentAttemptsCount < AttemptLights.Length;
     }
 
+    private void DurationSetter_OnValueChanged()
+    {
+        PreviewButton.interactable = ParametersManager.Instance.CurrentAttemptsCount < AttemptLights.Length;
+    }
+
     private void ParametersManager_OnParametersChanged(
-        IReadOnlyDictionary<ParameterData, float> parameters
+        IReadOnlyDictionary<ParameterData, float> parameters,
+        int tickCount
         )
     {
         RefreshKnobs();
     }
 
     private void ParametersManager_OnPreviewed(
-        IReadOnlyDictionary<ParameterData, float> parameters
+        IReadOnlyDictionary<ParameterData, float> parameters,
+        int tickCount
         )
     {
         RefreshAttemptLights();
@@ -95,6 +103,8 @@ public class ParametersInterface : MonoBehaviour
         PreviewButton.onClick.AddListener(PreviewButton_OnClick);
         CommitButton.onClick.AddListener(CommitButton_OnClick);
 
+        DurationSetter.OnValueChanged.AddListener(DurationSetter_OnValueChanged);
+
         ParametersManager.Instance.OnParametersChanged.AddListener(ParametersManager_OnParametersChanged);
         ParametersManager.Instance.OnPreviewed.AddListener(ParametersManager_OnPreviewed);
         ParametersManager.Instance.OnCommited.AddListener(ParametersManager_OnCommited);
@@ -109,6 +119,8 @@ public class ParametersInterface : MonoBehaviour
 
         PreviewButton.onClick.RemoveListener(PreviewButton_OnClick);
         CommitButton.onClick.RemoveListener(CommitButton_OnClick);
+
+        DurationSetter.OnValueChanged.RemoveListener(DurationSetter_OnValueChanged);
 
         if(ParametersManager.HasInstance)
         {

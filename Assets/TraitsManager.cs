@@ -105,18 +105,20 @@ public class TraitsManager : Singleton<TraitsManager>
     }
 
     private void ParametersManager_OnParametersChanged(
-        IReadOnlyDictionary<ParameterData, float> parameters
+        IReadOnlyDictionary<ParameterData, float> parameters,
+        int tickCount
         )
     {
-        RefreshTraits(1, parameters);
+        RefreshTraits(tickCount, parameters);
     }
 
     private void ParametersManager_OnPreviewed(
-        IReadOnlyDictionary<ParameterData, float> parameters
+        IReadOnlyDictionary<ParameterData, float> parameters,
+        int tickCount
         )
     {
         SavedTraits = new Dictionary<TraitData, TraitInfo>(Traits);
-        RefreshTraits(1, parameters);
+        RefreshTraits(tickCount, parameters);
     }
 
     private void ParametersManager_OnPreviewLeft()

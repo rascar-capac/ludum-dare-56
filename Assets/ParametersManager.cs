@@ -11,12 +11,12 @@ public class ParametersManager : Singleton<ParametersManager>
 
     public IReadOnlyDictionary<ParameterData, float> ParametersDisplayed => IsInPreview ? PreviewParameters : Parameters;
 
-    public UnityEvent<IReadOnlyDictionary<ParameterData, float>> OnParametersChanged { get; } = new();
-    public UnityEvent<IReadOnlyDictionary<ParameterData, float>> OnPreviewed { get; } = new();
+    public UnityEvent<IReadOnlyDictionary<ParameterData, float>, int> OnParametersChanged { get; } = new();
+    public UnityEvent<IReadOnlyDictionary<ParameterData, float>, int> OnPreviewed { get; } = new();
     public UnityEvent OnPreviewLeft { get; } = new();
     public UnityEvent OnCommited { get; } = new();
 
-    public void SetParameters(IReadOnlyDictionary<ParameterData, float> parameters)
+    public void SetParameters(IReadOnlyDictionary<ParameterData, float> parameters, int tickCount)
     {
         List<ParameterData> parameterTypes = Parameters.Keys.ToList();
 
@@ -25,10 +25,10 @@ public class ParametersManager : Singleton<ParametersManager>
             Parameters[type] = parameters[type];
         }
 
-        OnParametersChanged.Invoke(Parameters);
+        OnParametersChanged.Invoke(Parameters, tickCount);
     }
 
-    public void Preview(IReadOnlyDictionary<ParameterData, float> parameters)
+    public void Preview(IReadOnlyDictionary<ParameterData, float> parameters, int tickCount)
     {
         if(CurrentAttemptsCount >= 3)
         {
@@ -41,7 +41,7 @@ public class ParametersManager : Singleton<ParametersManager>
         CurrentAttemptsCount++;
         IsInPreview = true;
         PreviewParameters = parameters;
-        OnPreviewed.Invoke(parameters);
+        OnPreviewed.Invoke(parameters, tickCount);
         //post process
     }
 
@@ -59,10 +59,10 @@ public class ParametersManager : Singleton<ParametersManager>
         //post process
     }
 
-    public void Commit(IReadOnlyDictionary<ParameterData, float> parameters)
+    public void Commit(IReadOnlyDictionary<ParameterData, float> parameters, int tickCount)
     {
         TryQuitPreview();
-        SetParameters(parameters);
+        SetParameters(parameters, tickCount);
         CurrentAttemptsCount = 0;
         //handle fade in/out
         //potential defeat/win
