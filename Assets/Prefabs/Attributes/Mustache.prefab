@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 429586295964501804}
   - component: {fileID: 6419973603753437149}
+  - component: {fileID: 4302540823152186978}
   m_Layer: 0
   m_Name: Mustache
   m_TagString: Untagged
@@ -84,3 +85,15 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!210 &4302540823152186978
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5897587599327879766}
+  m_Enabled: 1
+  m_SortingLayerID: -126828949
+  m_SortingLayer: 3
+  m_SortingOrder: 0
+  m_SortAtRoot: 0

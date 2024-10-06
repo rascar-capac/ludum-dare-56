@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2897625754208930969}
   - component: {fileID: 2183010888095878321}
+  - component: {fileID: 4697622045154827930}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -84,6 +85,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!210 &4697622045154827930
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2480056492149819606}
+  m_Enabled: 1
+  m_SortingLayerID: 456506461
+  m_SortingLayer: 2
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
 --- !u!1 &8537638473214649897
 GameObject:
   m_ObjectHideFlags: 0
@@ -95,6 +108,7 @@ GameObject:
   - component: {fileID: 468270647017683580}
   - component: {fileID: 1058172390810535548}
   - component: {fileID: 3890264418316016364}
+  - component: {fileID: 5851700945419086506}
   m_Layer: 0
   m_Name: Bogbog
   m_TagString: Untagged
@@ -157,9 +171,23 @@ MonoBehaviour:
     - Key: {fileID: 11400000, guid: 9994727f84a13d84da584c6aeb6ae9aa, type: 2}
       Value: {fileID: 185250657756296613}
   AssignedDestination: {fileID: 0}
+  AssignedSpot: {fileID: 0}
   MetersPerSecond: 5
   MovementRotationAngle: 5
   MovementRotationDuration: 0.2
+  Animator: {fileID: 1058172390810535548}
+--- !u!210 &5851700945419086506
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8537638473214649897}
+  m_Enabled: 1
+  m_SortingLayerID: 456506461
+  m_SortingLayer: 2
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
 --- !u!1001 &6001702710592100339
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -211,10 +239,6 @@ PrefabInstance:
     - target: {fileID: 5897587599327879766, guid: 71c1fb87a754c3c44baf1deede3ef46f, type: 3}
       propertyPath: m_Name
       value: Mustache
-      objectReference: {fileID: 0}
-    - target: {fileID: 6419973603753437149, guid: 71c1fb87a754c3c44baf1deede3ef46f, type: 3}
-      propertyPath: m_SortingLayer
-      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -10,6 +10,7 @@ public class Bogbog : MonoBehaviour
     public float MetersPerSecond;
     public float MovementRotationAngle;
     public float MovementRotationDuration;
+    public Animator Animator;
 
     public bool DestinationIsReached => (AssignedDestination.position - transform.position).sqrMagnitude < 0.1f;
 
@@ -95,6 +96,7 @@ public class Bogbog : MonoBehaviour
     private void Awake()
     {
         SetEnabledAllAttributes(false);
+        Animator.Play("idle0", 0, Random.value);
     }
 
     private void Update()
