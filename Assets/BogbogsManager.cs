@@ -256,7 +256,7 @@ public class BogbogsManager : Singleton<BogbogsManager>
         }
     }
 
-    private void TraitsManager_OnTraitStatusChanged(TraitData traitType, ETraitStatus oldStatus, ETraitStatus newStatus)
+    private void TraitsManager_OnTraitStatusChanged(TraitData traitType, ETraitStatus status)
     {
         foreach(Bogbog bogbog in Bogbogs)
         {
