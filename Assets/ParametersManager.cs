@@ -6,11 +6,11 @@ public class ParametersManager : Singleton<ParametersManager>
 {
     public SerializableDictionary<ParameterData, float> Parameters;
     public IntegerRange MinMaxTickCount;
+
     public int CurrentAttemptsCount;
     public bool IsInPreview;
-    public IReadOnlyDictionary<ParameterData, float> PreviewParameters;
-
-    public IReadOnlyDictionary<ParameterData, float> ParametersDisplayed => IsInPreview ? PreviewParameters : Parameters;
+    public int TotalTicksCounter;
+    public int SavedTotalTicksCounter;
 
     public UnityEvent<IReadOnlyDictionary<ParameterData, float>, int> OnParametersChanged { get; } = new();
     public UnityEvent<IReadOnlyDictionary<ParameterData, float>, int> OnPreviewed { get; } = new();
@@ -37,11 +37,12 @@ public class ParametersManager : Singleton<ParametersManager>
         }
 
         TryQuitPreview();
-
-        BogbogsManager.Instance.SaveCurrentState();
         CurrentAttemptsCount++;
         IsInPreview = true;
-        PreviewParameters = parameters;
+
+        SavedTotalTicksCounter = TotalTicksCounter;
+        TotalTicksCounter += tickCount;
+        BogbogsManager.Instance.SaveCurrentState();
         OnPreviewed.Invoke(parameters, tickCount);
         //post process
     }
@@ -53,9 +54,10 @@ public class ParametersManager : Singleton<ParametersManager>
             return;
         }
 
-        BogbogsManager.Instance.RestorePreviousState();
         IsInPreview = false;
-        PreviewParameters = null;
+
+        TotalTicksCounter = SavedTotalTicksCounter;
+        BogbogsManager.Instance.RestorePreviousState();
         OnPreviewLeft.Invoke();
         //post process
     }
@@ -65,9 +67,18 @@ public class ParametersManager : Singleton<ParametersManager>
         TryQuitPreview();
         SetParameters(parameters, tickCount);
         CurrentAttemptsCount = 0;
+        TotalTicksCounter += tickCount;
+
         //handle fade in/out
         //potential defeat/win
         //stop post process
         OnCommited.Invoke(parameters, tickCount);
+    }
+
+    public override void Awake()
+    {
+        base.Awake();
+
+        TotalTicksCounter = 1;
     }
 }

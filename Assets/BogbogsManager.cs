@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class BogbogsManager : Singleton<BogbogsManager>
 {
@@ -18,6 +18,8 @@ public class BogbogsManager : Singleton<BogbogsManager>
     public int MaxBogbogCount => DestinationPoints.Count - 1;
 
     public SerializableDictionary<Bogbog, float> NextDestinationAssignmentTimes;
+
+    public UnityEvent OnBogbogCountChanged { get; } = new();
 
     public void SaveCurrentState()
     {
@@ -47,6 +49,8 @@ public class BogbogsManager : Singleton<BogbogsManager>
         }
 
         BogbogsBeforePreview.Clear();
+
+        OnBogbogCountChanged.Invoke();
     }
 
     public void AssignSpots()
@@ -201,6 +205,7 @@ public class BogbogsManager : Singleton<BogbogsManager>
 
         Bogbog bogbog = Instantiate(BogbogPrefab);
         Bogbogs.Add(bogbog);
+        OnBogbogCountChanged.Invoke();
 
         Transform random_spot = GetRandomSpot();
         Transform random_destination = GetRandomDestination();
