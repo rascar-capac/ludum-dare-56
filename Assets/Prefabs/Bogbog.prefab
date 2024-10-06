@@ -156,6 +156,10 @@ MonoBehaviour:
     KeyValueList:
     - Key: {fileID: 11400000, guid: 9994727f84a13d84da584c6aeb6ae9aa, type: 2}
       Value: {fileID: 185250657756296613}
+  AssignedDestination: {fileID: 0}
+  MetersPerSecond: 5
+  MovementRotationAngle: 5
+  MovementRotationDuration: 0.2
 --- !u!1001 &6001702710592100339
 PrefabInstance:
   m_ObjectHideFlags: 0
