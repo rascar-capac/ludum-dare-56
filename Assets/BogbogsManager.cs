@@ -294,7 +294,7 @@ public class BogbogsManager : Singleton<BogbogsManager>
 
         if(random_destination == null || random_spot != null && Random.value > 0.5)
         {
-            bogbog.AssignSpot(random_spot);
+            AssignSpot(bogbog, random_spot);
         }
         else
         {
