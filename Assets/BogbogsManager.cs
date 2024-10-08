@@ -96,7 +96,7 @@ public class BogbogsManager : Singleton<BogbogsManager>
         {
             Bogbog bogbog = availableBogbogs[Random.Range(0, availableBogbogs.Count)];
             Transform spot = availableSpots[Random.Range(0, availableSpots.Count)];
-            bogbog.AssignSpot(spot);
+            AssignSpot(bogbog, spot);
             AssignDestination(bogbog, null);
             availableBogbogs.Remove(bogbog);
             availableSpots.Remove(spot);
@@ -107,6 +107,7 @@ public class BogbogsManager : Singleton<BogbogsManager>
         foreach(Bogbog bogbog in availableBogbogs)
         {
             Transform point = availableDestinationPoints[Random.Range(0, availableDestinationPoints.Count)];
+            AssignSpot(bogbog, null);
             AssignDestination(bogbog, point, instant: true);
             availableDestinationPoints.Remove(point);
         }

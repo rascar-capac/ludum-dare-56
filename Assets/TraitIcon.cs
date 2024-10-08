@@ -8,7 +8,6 @@ public class TraitIcon : MonoBehaviour
     public GameObject GreatBackground;
     public Image Icon;
     public TMP_Text Text;
-    public TraitData Data;
     public float BumpDuration;
     public Sprite UnknownTraitSprite;
     public Image FluctuationIcon;
@@ -16,6 +15,8 @@ public class TraitIcon : MonoBehaviour
     public Sprite DecreasingSprite;
     public Sprite StagnatingSprite;
     public float StagnationThreshold;
+
+    public TraitData Data;
 
     public void Initialize(TraitData data, TraitInfo info)
     {

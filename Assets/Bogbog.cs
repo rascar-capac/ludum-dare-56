@@ -43,6 +43,8 @@ public class Bogbog : MonoBehaviour
         }
 
         AssignedSpot = spot;
+
+        ResetAnimation();
     }
 
     public void AssignDestination(Transform destination, bool instant = false)
@@ -59,6 +61,7 @@ public class Bogbog : MonoBehaviour
 
         AssignedDestination = destination;
 
+        ResetAnimation();
         UpdateMovementAnimation();
     }
 
@@ -108,7 +111,6 @@ public class Bogbog : MonoBehaviour
     private void Awake()
     {
         SetEnabledAllAttributes(false);
-        ResetAnimation();
     }
 
     private void Update()
