@@ -9,7 +9,8 @@ public class TraitsManager : Singleton<TraitsManager>
     public SerializableDictionary<TraitData, TraitInfo> Traits;
     public float DevelopingTraitThreshold;
     public float GreatTraitThreshold;
-    public IReadOnlyDictionary<TraitData, TraitInfo> SavedTraits;
+
+    public IReadOnlyDictionary<TraitData, TraitInfo> TraitsBeforePreview;
 
     public UnityEvent<TraitData, ETraitStatus> OnTraitStatusChanged { get; } = new();
     public UnityEvent<TraitData, float, float> OnTraitValueChanged { get; } = new();
@@ -122,13 +123,13 @@ public class TraitsManager : Singleton<TraitsManager>
         int tickCount
         )
     {
-        SavedTraits = new Dictionary<TraitData, TraitInfo>(Traits);
+        TraitsBeforePreview = new Dictionary<TraitData, TraitInfo>(Traits);
         RefreshTraits(tickCount, parameters);
     }
 
     private void ParametersManager_OnPreviewClosed()
     {
-        Traits = new(SavedTraits.ToDictionary(trait => trait.Key, trait => trait.Value));
+        Traits = new(TraitsBeforePreview.ToDictionary(trait => trait.Key, trait => trait.Value));
     }
 
     public override void Awake()

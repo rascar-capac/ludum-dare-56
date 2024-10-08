@@ -17,7 +17,7 @@ public class ParametersManager : Singleton<ParametersManager>
     public IReadOnlyDictionary<ParameterData, float> PreviewParameters;
     public int PreviewTickCount;
     public int TotalTicksCounter;
-    public int SavedTotalTicksCounter;
+    public int TotalTicksCounterBeforePreview;
     public Tween VolumeTween;
 
     public UnityEvent<IReadOnlyDictionary<ParameterData, float>, int> OnParametersChanged { get; } = new();
@@ -64,7 +64,7 @@ public class ParametersManager : Singleton<ParametersManager>
         PreviewParameters = parameters;
         PreviewTickCount = tickCount;
 
-        SavedTotalTicksCounter = TotalTicksCounter;
+        TotalTicksCounterBeforePreview = TotalTicksCounter;
         TotalTicksCounter += tickCount;
         BogbogsManager.Instance.SaveCurrentState();
         OnPreviewed.Invoke(PreviewParameters, PreviewTickCount);
@@ -81,7 +81,7 @@ public class ParametersManager : Singleton<ParametersManager>
         PreviewParameters = null;
         PreviewTickCount = 0;
 
-        TotalTicksCounter = SavedTotalTicksCounter;
+        TotalTicksCounter = TotalTicksCounterBeforePreview;
         BogbogsManager.Instance.RestorePreviousState();
 
         if(applyVolumeEffect)
