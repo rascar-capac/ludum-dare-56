@@ -65,7 +65,9 @@ public class DebugInfos : MonoBehaviour
 
         foreach(DebugParameterInfo parameterInfo in ParameterInfos)
         {
-            parameterInfo.Refresh(ParametersManager.Instance.IsInPreview ? ParametersManager.Instance.PreviewParameters[parameterInfo.Type] : ParametersManager.Instance.Parameters[parameterInfo.Type]);
+            float lastValueApplied = ParametersManager.Instance.Parameters[parameterInfo.Type];
+            float? previewValue = ParametersManager.Instance.IsInPreview ? ParametersManager.Instance.PreviewParameters[parameterInfo.Type] : null;
+            parameterInfo.Refresh(lastValueApplied, previewValue);
         }
     }
 
