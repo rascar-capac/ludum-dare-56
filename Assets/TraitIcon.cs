@@ -54,16 +54,21 @@ public class TraitIcon : MonoBehaviour
                         transform.localScale = Vector3.zero;
                         transform.rotation = Quaternion.Euler(0, 0, 20f);
                     });
+
+                Icon.sprite = status == ETraitStatus.Developing ? UnknownTraitSprite : Data.Icon;
+                Text.transform.parent.gameObject.SetActive(status != ETraitStatus.Developing);
+                GreatBackground.SetActive(status == ETraitStatus.Great);
             }
         }
-
-        Icon.sprite = status == ETraitStatus.Developing ? UnknownTraitSprite : Data.Icon;
-        Text.transform.parent.gameObject.SetActive(status != ETraitStatus.Developing);
-        GreatBackground.SetActive(status == ETraitStatus.Great);
     }
 
-    public void RefreshFluctuation(float difference)
+    public void RefreshFluctuation(ETraitStatus status, float difference)
     {
+        if(status == ETraitStatus.NotPossessed)
+        {
+            return;
+        }
+
         if(Mathf.Abs(difference) < StagnationThreshold)
         {
             FluctuationIcon.sprite = StagnatingSprite;

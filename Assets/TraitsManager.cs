@@ -13,7 +13,7 @@ public class TraitsManager : Singleton<TraitsManager>
     public IReadOnlyDictionary<TraitData, TraitInfo> TraitsBeforePreview;
 
     public UnityEvent<TraitData, ETraitStatus> OnTraitStatusChanged { get; } = new();
-    public UnityEvent<TraitData, float, float> OnTraitValueChanged { get; } = new();
+    public UnityEvent<TraitData, ETraitStatus, float, float> OnTraitValueChanged { get; } = new();
 
     [ContextMenu("Skip 1 tick")]
     public void RefreshTraits()
@@ -60,7 +60,7 @@ public class TraitsManager : Singleton<TraitsManager>
 
         if(traitInfo.Value != oldValue)
         {
-            OnTraitValueChanged.Invoke(type, oldValue, traitInfo.Value);
+            OnTraitValueChanged.Invoke(type, traitInfo.Status, oldValue, traitInfo.Value);
         }
 
         RefreshTraitStatus(type);
@@ -110,6 +110,24 @@ public class TraitsManager : Singleton<TraitsManager>
         }
     }
 
+    public void RestoreTraits()
+    {
+        foreach(TraitData type in Traits.Keys)
+        {
+            if(Traits[type].Value != TraitsBeforePreview[type].Value)
+            {
+                OnTraitValueChanged.Invoke(type, TraitsBeforePreview[type].Status, Traits[type].Value, TraitsBeforePreview[type].Value);
+            }
+
+            if(Traits[type].Status != TraitsBeforePreview[type].Status)
+            {
+                OnTraitStatusChanged.Invoke(type, TraitsBeforePreview[type].Status);
+            }
+        }
+
+        Traits = new(TraitsBeforePreview.ToDictionary(trait => trait.Key, trait => trait.Value));
+    }
+
     private void ParametersManager_OnParametersChanged(
         IReadOnlyDictionary<ParameterData, float> parameters,
         int tickCount
@@ -129,7 +147,7 @@ public class TraitsManager : Singleton<TraitsManager>
 
     private void ParametersManager_OnPreviewClosed()
     {
-        Traits = new(TraitsBeforePreview.ToDictionary(trait => trait.Key, trait => trait.Value));
+        RestoreTraits();
     }
 
     public override void Awake()

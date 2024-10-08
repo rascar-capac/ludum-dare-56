@@ -16,14 +16,14 @@ public class TraitIconsInterface : MonoBehaviour
         icon.RefreshStatus(status);
     }
 
-    private void TraitsManager_OnTraitValueChanged(TraitData data, float oldValue, float newValue)
+    private void TraitsManager_OnTraitValueChanged(TraitData data, ETraitStatus status, float oldValue, float newValue)
     {
         if(!TraitIcons.TryGetValue(data, out TraitIcon icon) || data.IsHidden)
         {
             return;
         }
 
-        icon.RefreshFluctuation(difference: newValue - oldValue);
+        icon.RefreshFluctuation(status, difference: newValue - oldValue);
     }
 
     private void Awake()
