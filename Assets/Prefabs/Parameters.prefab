@@ -150,7 +150,7 @@ MonoBehaviour:
   - {fileID: 732979796465266427}
   - {fileID: 4617368869291353078}
   AttemptOffSprite: {fileID: 21300000, guid: 53d75916b0fa0a847826b6e77ed7b8cc, type: 3}
-  AttemptOnSprite: {fileID: 21300000, guid: fe318c5e473888345a7257f845d6b4ad, type: 3}
+  AttemptOnSprite: {fileID: 21300000, guid: b63bcfc82557bb44dad3c93dfc4ec59a, type: 3}
   DurationSetter: {fileID: 2613327456422844650}
   ClosePreviewButton: {fileID: 0}
   NoMoreAttemptsText: {fileID: 0}
