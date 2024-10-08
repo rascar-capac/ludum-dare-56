@@ -100,10 +100,15 @@ public class Bogbog : MonoBehaviour
         IsDead = true;
     }
 
+    public void ResetAnimation()
+    {
+        Animator.Play("idle0", 0, Random.value);
+    }
+
     private void Awake()
     {
         SetEnabledAllAttributes(false);
-        Animator.Play("idle0", 0, Random.value);
+        ResetAnimation();
     }
 
     private void Update()

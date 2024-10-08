@@ -301,6 +301,7 @@ public class BogbogsManager : Singleton<BogbogsManager>
             AssignDestination(bogbog, random_destination, instant: true);
         }
 
+        bogbog.ResetAnimation();
         RefreshAllAttributes(bogbog);
     }
 
