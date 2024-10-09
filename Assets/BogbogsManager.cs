@@ -335,7 +335,7 @@ public class BogbogsManager : Singleton<BogbogsManager>
         }
     }
 
-    private void TraitsManager_OnTraitStatusChanged(TraitData traitType, ETraitStatus status)
+    private void TraitsManager_OnTraitChanged(TraitData traitType, TraitInfo traitInfo)
     {
         foreach(Bogbog bogbog in Bogbogs)
         {
@@ -371,7 +371,7 @@ public class BogbogsManager : Singleton<BogbogsManager>
         SpawnBogbog();
         SpawnBogbog();
 
-        TraitsManager.Instance.OnTraitStatusChanged.AddListener(TraitsManager_OnTraitStatusChanged);
+        TraitsManager.Instance.OnTraitChanged.AddListener(TraitsManager_OnTraitChanged);
         ParametersManager.Instance.OnCommited.AddListener(ParametersManager_OnCommited);
         ParametersManager.Instance.OnPreviewed.AddListener(ParametersManager_OnPreviewed);
     }
@@ -395,7 +395,7 @@ public class BogbogsManager : Singleton<BogbogsManager>
 
         if(TraitsManager.HasInstance)
         {
-            TraitsManager.Instance.OnTraitStatusChanged.RemoveListener(TraitsManager_OnTraitStatusChanged);
+            TraitsManager.Instance.OnTraitChanged.RemoveListener(TraitsManager_OnTraitChanged);
         }
 
         if(ParametersManager.HasInstance)

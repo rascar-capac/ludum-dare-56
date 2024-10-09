@@ -18,7 +18,7 @@ public class DaysCounter : MonoBehaviour
         Refresh();
     }
 
-    private void ParametersManager_OnPreviewClosed()
+    private void ParametersManager_OnPreviewClosed(bool _)
     {
         Refresh();
     }

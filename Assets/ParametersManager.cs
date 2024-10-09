@@ -22,7 +22,7 @@ public class ParametersManager : Singleton<ParametersManager>
 
     public UnityEvent<IReadOnlyDictionary<ParameterData, float>, int> OnParametersChanged { get; } = new();
     public UnityEvent<IReadOnlyDictionary<ParameterData, float>, int> OnPreviewed { get; } = new();
-    public UnityEvent OnPreviewClosed { get; } = new();
+    public UnityEvent<bool> OnPreviewClosed { get; } = new();
     public UnityEvent<IReadOnlyDictionary<ParameterData, float>, int> OnCommited { get; } = new();
 
     public void SetParameters(IReadOnlyDictionary<ParameterData, float> parameters, int tickCount)
@@ -58,7 +58,7 @@ public class ParametersManager : Singleton<ParametersManager>
             VolumeTween = DOTween.To(() => Volume.weight, x => Volume.weight = x, 1f, 0.5f).SetEase(Ease.OutQuint);
         }
 
-        TryClosePreview(applyVolumeEffect: false);
+        TryClosePreview(isCommitting: false, applyVolumeEffect: false);
         CurrentAttemptsCount++;
         IsInPreview = true;
         PreviewParameters = parameters;
@@ -70,7 +70,7 @@ public class ParametersManager : Singleton<ParametersManager>
         OnPreviewed.Invoke(PreviewParameters, PreviewTickCount);
     }
 
-    public void TryClosePreview(bool applyVolumeEffect = true)
+    public void TryClosePreview(bool isCommitting, bool applyVolumeEffect = true)
     {
         if(!IsInPreview)
         {
@@ -96,7 +96,7 @@ public class ParametersManager : Singleton<ParametersManager>
                 });
         }
 
-        OnPreviewClosed.Invoke();
+        OnPreviewClosed.Invoke(isCommitting);
     }
 
     public void Commit()
@@ -108,7 +108,7 @@ public class ParametersManager : Singleton<ParametersManager>
 
         IReadOnlyDictionary<ParameterData, float> previewParameters = PreviewParameters;
         int previewTickCount = PreviewTickCount;
-        TryClosePreview();
+        TryClosePreview(isCommitting: true);
         SetParameters(previewParameters, previewTickCount);
         CurrentAttemptsCount = 0;
         TotalTicksCounter += previewTickCount;

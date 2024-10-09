@@ -12,8 +12,7 @@ public class TraitsManager : Singleton<TraitsManager>
 
     public IReadOnlyDictionary<TraitData, TraitInfo> TraitsBeforePreview;
 
-    public UnityEvent<TraitData, ETraitStatus> OnTraitStatusChanged { get; } = new();
-    public UnityEvent<TraitData, ETraitStatus, float, float> OnTraitValueChanged { get; } = new();
+    public UnityEvent<TraitData, TraitInfo> OnTraitChanged { get; } = new();
 
     [ContextMenu("Skip 1 tick")]
     public void RefreshTraits()
@@ -53,17 +52,16 @@ public class TraitsManager : Singleton<TraitsManager>
             totalInfluenceRatio = tickCount * -type.InfluenceLossPerTick;
         }
 
-        float oldValue = Traits[type].Value;
         TraitInfo traitInfo = Traits[type];
+        traitInfo.OldValue = traitInfo.Value;
         traitInfo.Value = Mathf.Clamp01(traitInfo.Value + totalInfluenceRatio);
+        RefreshTraitStatus(ref traitInfo);
         Traits[type] = traitInfo;
 
-        if(traitInfo.Value != oldValue)
+        if(traitInfo.Value != traitInfo.OldValue || traitInfo.Status != traitInfo.OldStatus)
         {
-            OnTraitValueChanged.Invoke(type, traitInfo.Status, oldValue, traitInfo.Value);
+            OnTraitChanged.Invoke(type, traitInfo);
         }
-
-        RefreshTraitStatus(type);
     }
 
     public float ComputeInfluenceGroupRatio01(InfluenceGroup group, IReadOnlyDictionary<ParameterData, float> parameters)
@@ -80,9 +78,9 @@ public class TraitsManager : Singleton<TraitsManager>
         return totalInfluenceRatio;
     }
 
-    public void RefreshTraitStatus(TraitData type)
+    public void RefreshTraitStatus(ref TraitInfo traitInfo)
     {
-        TraitInfo traitInfo = Traits[type];
+        traitInfo.OldStatus = traitInfo.Status;
 
         if(traitInfo.Value == 0)
         {
@@ -100,28 +98,18 @@ public class TraitsManager : Singleton<TraitsManager>
         {
             traitInfo.Status = ETraitStatus.Great;
         }
-
-        ETraitStatus oldStatus = Traits[type].Status;
-        Traits[type] = traitInfo;
-
-        if(traitInfo.Status != oldStatus)
-        {
-            OnTraitStatusChanged.Invoke(type, traitInfo.Status);
-        }
     }
 
-    public void RestoreTraits()
+    public void RestoreTraits(bool isCommitting)
     {
-        foreach(TraitData type in Traits.Keys)
+        if(!isCommitting)
         {
-            if(Traits[type].Value != TraitsBeforePreview[type].Value)
+            foreach(TraitData type in Traits.Keys)
             {
-                OnTraitValueChanged.Invoke(type, TraitsBeforePreview[type].Status, Traits[type].Value, TraitsBeforePreview[type].Value);
-            }
-
-            if(Traits[type].Status != TraitsBeforePreview[type].Status)
-            {
-                OnTraitStatusChanged.Invoke(type, TraitsBeforePreview[type].Status);
+                if(TraitsBeforePreview[type].Status != Traits[type].OldStatus || TraitsBeforePreview[type].Fluctuation != Traits[type].Fluctuation)
+                {
+                    OnTraitChanged.Invoke(type, TraitsBeforePreview[type]);
+                }
             }
         }
 
@@ -145,9 +133,9 @@ public class TraitsManager : Singleton<TraitsManager>
         RefreshTraits(tickCount, parameters);
     }
 
-    private void ParametersManager_OnPreviewClosed()
+    private void ParametersManager_OnPreviewClosed(bool isCommitting)
     {
-        RestoreTraits();
+        RestoreTraits(isCommitting);
     }
 
     public override void Awake()
@@ -177,6 +165,9 @@ public struct TraitInfo
 {
     public float Value;
     public ETraitStatus Status;
+    public float OldValue;
+    public ETraitStatus OldStatus;
+    public readonly float Fluctuation => Value - OldValue;
 }
 
 public enum ETraitStatus

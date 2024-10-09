@@ -6,24 +6,15 @@ public class TraitIconsInterface : MonoBehaviour
     public TraitIcon TraitIconPrefab;
     public SerializableDictionary<TraitData, TraitIcon> TraitIcons;
 
-    private void TraitsManager_OnTraitStatusChanged(TraitData data, ETraitStatus status)
+    private void TraitsManager_OnTraitChanged(TraitData data, TraitInfo traitInfo)
     {
         if(!TraitIcons.TryGetValue(data, out TraitIcon icon) || data.IsHidden)
         {
             return;
         }
 
-        icon.RefreshStatus(status);
-    }
-
-    private void TraitsManager_OnTraitValueChanged(TraitData data, ETraitStatus status, float oldValue, float newValue)
-    {
-        if(!TraitIcons.TryGetValue(data, out TraitIcon icon) || data.IsHidden)
-        {
-            return;
-        }
-
-        icon.RefreshFluctuation(status, difference: newValue - oldValue);
+        icon.RefreshStatus(traitInfo.Status);
+        icon.RefreshFluctuation(traitInfo.Status, difference: traitInfo.Fluctuation);
     }
 
     private void Awake()
@@ -33,8 +24,7 @@ public class TraitIconsInterface : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        TraitsManager.Instance.OnTraitStatusChanged.AddListener(TraitsManager_OnTraitStatusChanged);
-        TraitsManager.Instance.OnTraitValueChanged.AddListener(TraitsManager_OnTraitValueChanged);
+        TraitsManager.Instance.OnTraitChanged.AddListener(TraitsManager_OnTraitChanged);
 
         foreach((TraitData type, TraitInfo info) in TraitsManager.Instance.Traits)
         {
@@ -48,8 +38,7 @@ public class TraitIconsInterface : MonoBehaviour
     {
         if(TraitsManager.HasInstance)
         {
-            TraitsManager.Instance.OnTraitStatusChanged.RemoveListener(TraitsManager_OnTraitStatusChanged);
-            TraitsManager.Instance.OnTraitValueChanged.RemoveListener(TraitsManager_OnTraitValueChanged);
+            TraitsManager.Instance.OnTraitChanged.RemoveListener(TraitsManager_OnTraitChanged);
         }
     }
 }

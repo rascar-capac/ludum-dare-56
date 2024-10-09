@@ -43,7 +43,7 @@ public class ParametersInterface : MonoBehaviour
 
     public void ClosePreview()
     {
-        ParametersManager.Instance.TryClosePreview();
+        ParametersManager.Instance.TryClosePreview(isCommitting: false);
     }
 
     public void Commit()
@@ -75,7 +75,7 @@ public class ParametersInterface : MonoBehaviour
         NoMoreAttemptsText.SetActive(ParametersManager.Instance.CurrentAttemptsCount == AttemptLights.Length);
     }
 
-    private void ParametersManager_OnPreviewClosed()
+    private void ParametersManager_OnPreviewClosed(bool _)
     {
         RefreshAttemptLights();
         CommitButton.gameObject.SetActive(false);
