@@ -98,6 +98,7 @@ public class DebugInfos : MonoBehaviour
     private void Awake()
     {
         Initialize();
+        gameObject.SetActive(IsEnabled);
     }
 
     private void Update()
