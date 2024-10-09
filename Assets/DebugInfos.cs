@@ -58,15 +58,39 @@ public class DebugInfos : MonoBehaviour
 
         foreach(DebugTraitInfo traitInfo in TraitInfos)
         {
-            float realtimeValue = ParametersManager.Instance.IsInPreview ? TraitsManager.Instance.TraitsBeforePreview[traitInfo.Type].Value : TraitsManager.Instance.Traits[traitInfo.Type].Value;
-            float? previewValue = ParametersManager.Instance.IsInPreview ? TraitsManager.Instance.Traits[traitInfo.Type].Value : null;
+            float realtimeValue;
+            float? previewValue;
+
+            if(ParametersManager.Instance.IsInPreview)
+            {
+                realtimeValue = TraitsManager.Instance.TraitsBeforePreview[traitInfo.Type].Value;
+                previewValue = TraitsManager.Instance.Traits[traitInfo.Type].Value;
+                previewValue = previewValue != realtimeValue ? previewValue : null;
+            }
+            else
+            {
+                realtimeValue = TraitsManager.Instance.Traits[traitInfo.Type].Value;
+                previewValue = null;
+            }
+
             traitInfo.Refresh(realtimeValue, previewValue);
         }
 
         foreach(DebugParameterInfo parameterInfo in ParameterInfos)
         {
             float lastValueApplied = ParametersManager.Instance.Parameters[parameterInfo.Type];
-            float? previewValue = ParametersManager.Instance.IsInPreview ? ParametersManager.Instance.PreviewParameters[parameterInfo.Type] : null;
+            float? previewValue;
+
+            if(ParametersManager.Instance.IsInPreview)
+            {
+                previewValue = ParametersManager.Instance.PreviewParameters[parameterInfo.Type];
+                previewValue = previewValue != lastValueApplied ? previewValue : null;
+            }
+            else
+            {
+                previewValue = null;
+            }
+
             parameterInfo.Refresh(lastValueApplied, previewValue);
         }
     }

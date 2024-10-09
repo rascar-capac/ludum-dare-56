@@ -27,7 +27,7 @@ public class DebugTraitInfo : MonoBehaviour
         BackgroundFill.fillAmount = realtimeValueIsGreater ? realtimeValue : previewValue.Value;
         BackgroundFill.color = realtimeValueIsGreater ? RealtimeColor : PreviewColor;
 
-        RealTimeValueText.text = realtimeValue.ToString();
+        RealTimeValueText.text = realtimeValue.ToString("N1");
 
         if(previewValue != null)
         {
@@ -35,12 +35,13 @@ public class DebugTraitInfo : MonoBehaviour
             ForegroundFill.fillAmount = realtimeValueIsGreater ? previewValue.Value : realtimeValue;
             ForegroundFill.color = realtimeValueIsGreater ? PreviewColor : RealtimeColor;
 
-            PreviewValueText.text = "> " + previewValue.ToString();
+            PreviewValueText.gameObject.SetActive(true);
+            PreviewValueText.text = "> " + previewValue.Value.ToString("N1");
         }
         else
         {
             ForegroundFill.enabled = false;
-            PreviewValueText.enabled = false;
+            PreviewValueText.gameObject.SetActive(false);
         }
     }
 }
