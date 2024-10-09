@@ -33,7 +33,7 @@ public class ParametersInterface : MonoBehaviour
             attemptLight.sprite = attemptIndex < ParametersManager.Instance.CurrentAttemptsCount ? AttemptOnSprite : AttemptOffSprite;
         }
 
-        PreviewButton.interactable = ParametersManager.Instance.CurrentAttemptsCount < AttemptLights.Length;
+        PreviewButton.interactable =  BogbogsManager.Instance.Bogbogs.Count > 0 && ParametersManager.Instance.CurrentAttemptsCount < AttemptLights.Length;
     }
 
     public void Preview()
@@ -53,12 +53,12 @@ public class ParametersInterface : MonoBehaviour
 
     private void Knob_OnValueChanged()
     {
-        PreviewButton.interactable = ParametersManager.Instance.CurrentAttemptsCount < AttemptLights.Length;
+        PreviewButton.interactable = BogbogsManager.Instance.Bogbogs.Count > 0 && ParametersManager.Instance.CurrentAttemptsCount < AttemptLights.Length;
     }
 
     private void DurationSetter_OnValueChanged()
     {
-        PreviewButton.interactable = ParametersManager.Instance.CurrentAttemptsCount < AttemptLights.Length;
+        PreviewButton.interactable = BogbogsManager.Instance.Bogbogs.Count > 0 && ParametersManager.Instance.CurrentAttemptsCount < AttemptLights.Length;
     }
 
     private void ParametersManager_OnParametersChanged(IReadOnlyDictionary<ParameterData, float> parameters, int tickCount)
@@ -106,6 +106,11 @@ public class ParametersInterface : MonoBehaviour
         ClosePreview();
     }
 
+    private void BogbogsManager_OnAllBogbogDead(int tickCount)
+    {
+        PreviewButton.interactable = false;
+    }
+
     private void Awake()
     {
         foreach(Image attemptLight in AttemptLights)
@@ -134,6 +139,8 @@ public class ParametersInterface : MonoBehaviour
         ParametersManager.Instance.OnPreviewed.AddListener(ParametersManager_OnPreviewed);
         ParametersManager.Instance.OnPreviewClosed.AddListener(ParametersManager_OnPreviewClosed);
         ParametersManager.Instance.OnCommited.AddListener(ParametersManager_OnCommited);
+
+        BogbogsManager.Instance.OnAllBogbogDead.AddListener(BogbogsManager_OnAllBogbogDead);
     }
 
     private void OnDestroy()
@@ -155,6 +162,11 @@ public class ParametersInterface : MonoBehaviour
             ParametersManager.Instance.OnPreviewed.RemoveListener(ParametersManager_OnPreviewed);
             ParametersManager.Instance.OnPreviewClosed.RemoveListener(ParametersManager_OnPreviewClosed);
             ParametersManager.Instance.OnCommited.RemoveListener(ParametersManager_OnCommited);
+        }
+
+        if(BogbogsManager.HasInstance)
+        {
+            BogbogsManager.Instance.OnAllBogbogDead.RemoveListener(BogbogsManager_OnAllBogbogDead);
         }
     }
 }

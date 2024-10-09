@@ -215,19 +215,19 @@ public class BogbogsManager : Singleton<BogbogsManager>
 
         for(int tickIndex = 0; tickIndex < tickCount; tickIndex++)
         {
-            if(Bogbogs.Count == 0)
-            {
-                OnAllBogbogDead.Invoke(ParametersManager.Instance.TotalTicksCounter - tickCount + Mathf.Max(0, tickIndex - 1));
-
-                return;
-            }
-
             float deathRatio = MinMaxDeathRatioPerTick.RemapFrom(hurtTraitInfo.Value, 0.3f, 1f, must_clamp: true);
             int deathCount = Mathf.CeilToInt(Bogbogs.Count * deathRatio);
 
             for(int bogbogIndex = 0; bogbogIndex < deathCount; bogbogIndex++)
             {
                 KillBogbog(Bogbogs[bogbogIndex]);
+            }
+
+            if(Bogbogs.Count == 0)
+            {
+                OnAllBogbogDead.Invoke(ParametersManager.Instance.TotalTicksCounter - tickCount + Mathf.Max(0, tickIndex - 1));
+
+                return;
             }
         }
     }
